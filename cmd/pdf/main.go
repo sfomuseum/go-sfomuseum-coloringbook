@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/go-pdf/fpdf"
 	"github.com/sfomuseum/go-sfomuseum-colouringbook"
@@ -16,11 +17,11 @@ import (
 
 func main() {
 
-	var image string
+	var object_image string
 	var object_id int64
 	var reader_uri string
 
-	flag.StringVar(&image, "image", "", "...")
+	flag.StringVar(&object_image, "object-image", "", "...")
 	flag.Int64Var(&object_id, "object-id", 0, "...")
 	flag.StringVar(&reader_uri, "reader-uri", "https://static.sfomuseum.org/data/", "...")
 
@@ -38,8 +39,6 @@ func main() {
 
 	pdf := fpdf.New("L", "in", "Letter", "")
 
-	// Something something something get all the images for object here...
-
 	// Get object metadata
 
 	body, err := wof_reader.LoadBytes(ctx, r, object_id)
@@ -55,14 +54,41 @@ func main() {
 
 	url := fmt.Sprintf("https://collection.sfomuseum.org/objects/%d/", object_id)
 
+	// Derive contoured image if necessary
+
+	if object_image == "" {
+
+		primary_rsp := gjson.GetBytes(body, "properties.millsfield:primary_image")
+
+		if !primary_rsp.Exists() {
+			log.Fatalf("Object is missing primary image property")
+		}
+
+		image_id := primary_rsp.Int()
+
+		derived_image, err := colouringbook.DeriveObjectImage(ctx, r, image_id)
+
+		if err != nil {
+			log.Fatalf("Failed to derive object image, %v", err)
+		}
+
+		defer os.Remove(derived_image)
+
+		object_image = derived_image
+	}
+
+	// Add sheet to colouring book
+
 	sheet_opts := &colouringbook.AddSheetOptions{
-		Image:           image,
+		Image:           object_image,
 		URL:             url,
 		Title:           title_rsp.String(),
 		Date:            date_rsp.String(),
 		CreditLine:      creditline_rsp.String(),
 		AccessionNumber: accession_number_rsp.String(),
 	}
+
+	log.Println("ADD", sheet_opts.Image, url)
 
 	err = colouringbook.AddSheet(ctx, pdf, sheet_opts)
 

@@ -6,6 +6,7 @@ require (
 	github.com/aaronland/go-image-contour v1.0.2
 	github.com/boombuler/barcode v1.0.1
 	github.com/go-pdf/fpdf v0.9.0
+	github.com/jtacoma/uritemplates v1.0.0
 	github.com/sfomuseum/go-svg v0.0.0-20231208192434-a3c9facf873c
 	github.com/tidwall/gjson v1.14.1
 	github.com/whosonfirst/go-reader v1.0.2

@@ -4,108 +4,102 @@ import (
 	"context"
 	"fmt"
 	"image"
+	_ "image/jpeg"
 	"image/png"
+	"log"
+	"net/http"
 	"os"
-	"os/exec"
 
-	"github.com/aaronland/go-image-contour"
-	"github.com/sfomuseum/go-svg"
+	"github.com/jtacoma/uritemplates"
+	"github.com/tidwall/gjson"
+	"github.com/whosonfirst/go-reader"
+	wof_reader "github.com/whosonfirst/go-whosonfirst-reader"
 )
 
-type OutlineOptions struct {
-}
+func DeriveObjectImage(ctx context.Context, r reader.Reader, image_id int64) (string, error) {
 
-type TraceOptions struct {
-}
-
-func GenerateOutline(ctx context.Context, im image.Image, opts *OutlineOptions) (image.Image, error) {
-
-	vtrace_infile, err := os.CreateTemp("", "vtrace.*.png")
+	im_body, err := wof_reader.LoadBytes(ctx, r, image_id)
 
 	if err != nil {
-		return nil, fmt.Errorf("Failed to create vtrace input file, %w", err)
+		return "", fmt.Errorf("Failed to load body for image %d, %v", image_id, err)
 	}
 
-	infile_uri := vtrace_infile.Name()
-	defer os.Remove(infile_uri)
+	o_rsp := gjson.GetBytes(im_body, "properties.media:properties.sizes.o")
 
-	err = png.Encode(vtrace_infile, im)
+	if !o_rsp.Exists() {
+		return "", fmt.Errorf("Image %d is missing properties.media:properties.sizes.o property")
+	}
+
+	ext_rsp := o_rsp.Get("extension")
+	secret_rsp := o_rsp.Get("secret")
+
+	template_rsp := gjson.GetBytes(im_body, "properties.media:uri_template")
+
+	if !template_rsp.Exists() {
+		return "", fmt.Errorf("Image %d is missing properties.media:uri_template property")
+	}
+
+	uri_template, err := uritemplates.Parse(template_rsp.String())
 
 	if err != nil {
-		return nil, fmt.Errorf("Failed to encode image for tracing, %w", err)
+		return "", fmt.Errorf("Failed to create URI template, %v", err)
 	}
 
-	err = vtrace_infile.Close()
+	template_values := map[string]interface{}{
+		"secret":    secret_rsp.String(),
+		"extention": ext_rsp.String(),
+		"label":     "o",
+	}
+
+	im_uri, err := uri_template.Expand(template_values)
 
 	if err != nil {
-		return nil, fmt.Errorf("Failed to close infile after writing, %w", err)
+		return "", fmt.Errorf("Failed to expand URI template, %v", err)
 	}
 
-	vtrace_outfile, err := os.CreateTemp("", "vtrace.*.svg")
+	im_rsp, err := http.Get(im_uri)
 
 	if err != nil {
-		return nil, fmt.Errorf("Failed to create vtrace outfile file, %w", err)
+		return "", fmt.Errorf("Failed to retrieve %s, %w", im_uri, err)
 	}
 
-	err = vtrace_outfile.Close()
+	defer im_rsp.Body.Close()
+
+	im, _, err := image.Decode(im_rsp.Body)
 
 	if err != nil {
-		return nil, fmt.Errorf("Failed to close outfile, %w", err)
+		return "", fmt.Errorf("Failed to decode image %d (%s), %v", image_id, im_uri, err)
 	}
 
-	outfile_uri := vtrace_outfile.Name()
-	defer os.Remove(outfile_uri)
+	log.Println("Generate outline")
 
-	trace_opts := &TraceOptions{}
-
-	traced_im, err := Trace(ctx, infile_uri, outfile_uri, trace_opts)
+	contoured_im, err := GenerateOutline(ctx, im, nil)
 
 	if err != nil {
-		return nil, fmt.Errorf("Failed to trace image, %w", err)
+		return "", fmt.Errorf("Failed to generate outline for image %d, %w", image_id, err)
 	}
 
-	contoured_im, err := contour.ContourImage(ctx, traced_im, 12, 1.0)
+	im_tmpfile, err := os.CreateTemp("", "*.png")
 
 	if err != nil {
-		return nil, fmt.Errorf("Failed to contour image, %w", err)
+		return "", fmt.Errorf("Failed to create outline file, %v", err)
 	}
 
-	return contoured_im, nil
-}
+	object_image := im_tmpfile.Name()
 
-func Trace(ctx context.Context, input string, output string, opts *TraceOptions) (image.Image, error) {
-
-	err := Vtrace(ctx, input, output)
+	err = png.Encode(im_tmpfile, contoured_im)
 
 	if err != nil {
-		return nil, fmt.Errorf("Failed to run vtracer, %w", err)
+		os.Remove(object_image)
+		return "", fmt.Errorf("Failed to encode outline file, %v", err)
 	}
 
-	r, err := os.Open(output)
+	err = im_tmpfile.Close()
 
 	if err != nil {
-		return nil, fmt.Errorf("Failed to open %s for reading, %w", output, err)
+		os.Remove(object_image)
+		return "", fmt.Errorf("Failed to close outline file, %v", err)
 	}
 
-	defer r.Close()
-
-	return svg.Rasterize(ctx, r)
-}
-
-func Vtrace(ctx context.Context, input string, output string) error {
-
-	cmd := "vtracer"
-
-	args := []string{
-		"-i",
-		input,
-		"-o",
-		output,
-		"--color_precision",
-		"8",
-		"--filter_speckle",
-		"8",
-	}
-
-	return exec.CommandContext(ctx, cmd, args...).Run()
+	return object_image, nil
 }
