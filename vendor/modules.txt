@@ -1,0 +1,19 @@
+# github.com/boombuler/barcode v1.0.1
+## explicit
+github.com/boombuler/barcode
+github.com/boombuler/barcode/aztec
+github.com/boombuler/barcode/codabar
+github.com/boombuler/barcode/code128
+github.com/boombuler/barcode/code39
+github.com/boombuler/barcode/datamatrix
+github.com/boombuler/barcode/ean
+github.com/boombuler/barcode/qr
+github.com/boombuler/barcode/twooffive
+github.com/boombuler/barcode/utils
+# github.com/go-pdf/fpdf v0.9.0
+## explicit; go 1.20
+github.com/go-pdf/fpdf
+github.com/go-pdf/fpdf/contrib/barcode
+# github.com/ruudk/golang-pdf417 v0.0.0-20201230142125-a7e3863a1245
+## explicit; go 1.15
+github.com/ruudk/golang-pdf417
