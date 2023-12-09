@@ -69,7 +69,9 @@ func GenerateOutline(ctx context.Context, im image.Image, opts *OutlineOptions) 
 
 	log.Println("CONTOUR")
 
-	contoured_im, err := contour.ContourImage(ctx, traced_im, 12, 1.0)
+	n := 12
+
+	contoured_im, err := contour.ContourImage(ctx, traced_im, n, 1.0)
 
 	if err != nil {
 		return nil, fmt.Errorf("Failed to contour image, %w", err)

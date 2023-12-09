@@ -2,17 +2,19 @@ package main
 
 import (
 	"context"
-	"flag"
 	"fmt"
 	"log"
 	"os"
 
+	aa_bucket "github.com/aaronland/gocloud-blob/bucket"
 	"github.com/go-pdf/fpdf"
+	"github.com/sfomuseum/go-flags/flagset"
 	"github.com/sfomuseum/go-sfomuseum-colouringbook"
 	"github.com/tidwall/gjson"
 	"github.com/whosonfirst/go-reader"
 	_ "github.com/whosonfirst/go-reader-http"
 	wof_reader "github.com/whosonfirst/go-whosonfirst-reader"
+	_ "gocloud.dev/blob/fileblob"
 )
 
 func main() {
@@ -20,12 +22,18 @@ func main() {
 	var object_image string
 	var object_id int64
 	var reader_uri string
+	var bucket_uri string
+	var filename string
 
-	flag.StringVar(&object_image, "object-image", "", "...")
-	flag.Int64Var(&object_id, "object-id", 0, "...")
-	flag.StringVar(&reader_uri, "reader-uri", "https://static.sfomuseum.org/data/", "...")
+	fs := flagset.NewFlagSet("colouringbook")
 
-	flag.Parse()
+	fs.StringVar(&object_image, "object-image", "", "...")
+	fs.Int64Var(&object_id, "object-id", 0, "...")
+	fs.StringVar(&reader_uri, "reader-uri", "https://static.sfomuseum.org/data/", "...")
+	fs.StringVar(&bucket_uri, "bucket-uri", "cwd://", "...")
+	fs.StringVar(&filename, "filename", "", "...")
+
+	flagset.Parse(fs)
 
 	ctx := context.Background()
 
@@ -34,6 +42,27 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to create reader, %v", err)
 	}
+
+	// Set up bucket
+
+	if bucket_uri == "cwd://" {
+
+		cwd, err := os.Getwd()
+
+		if err != nil {
+			log.Fatalf("Failed to derive current working directory, %v", err)
+		}
+
+		bucket_uri = fmt.Sprintf("file://%s", cwd)
+	}
+
+	bucket, err := aa_bucket.OpenBucket(ctx, bucket_uri)
+
+	if err != nil {
+		log.Fatalf("Failed to open bucket, %v", err)
+	}
+
+	defer bucket.Close()
 
 	// Create PDF
 
@@ -88,19 +117,31 @@ func main() {
 		AccessionNumber: accession_number_rsp.String(),
 	}
 
-	log.Println("ADD", sheet_opts.Image, url)
-
 	err = colouringbook.AddSheet(ctx, pdf, sheet_opts)
 
 	if err != nil {
 		log.Fatalf("Failed to add sheet, %v", err)
 	}
 
-	// PDF files
+	// Publish PDF file
 
-	err = pdf.OutputFileAndClose("test.pdf")
+	if filename == "" {
+		filename = fmt.Sprintf("%d-coloringbook.pdf", object_id)
+	}
+
+	wr, err := bucket.NewWriter(ctx, filename, nil)
 
 	if err != nil {
-		panic(err)
+		log.Fatalf("Failed to create new writer for %s, %v", filename, err)
 	}
+
+	err = pdf.OutputAndClose(wr)
+
+	if err != nil {
+		log.Fatalf("Failed to write %s, %v", filename, err)
+	}
+
+	log.Printf("Wrote %s\n", filename)
+
+	// Update object record here...
 }

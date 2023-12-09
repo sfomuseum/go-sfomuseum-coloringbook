@@ -1,2 +1,5 @@
 *~
 bin
+*.pdf.attrs
+*.pdf
+.DS_Store

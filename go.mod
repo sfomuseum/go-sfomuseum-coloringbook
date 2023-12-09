@@ -4,14 +4,17 @@ go 1.21.5
 
 require (
 	github.com/aaronland/go-image-contour v1.0.2
+	github.com/aaronland/gocloud-blob v0.0.13
 	github.com/boombuler/barcode v1.0.1
 	github.com/go-pdf/fpdf v0.9.0
 	github.com/jtacoma/uritemplates v1.0.0
+	github.com/sfomuseum/go-flags v0.10.0
 	github.com/sfomuseum/go-svg v0.0.0-20231208192434-a3c9facf873c
 	github.com/tidwall/gjson v1.14.1
 	github.com/whosonfirst/go-reader v1.0.2
 	github.com/whosonfirst/go-reader-http v0.3.1
 	github.com/whosonfirst/go-whosonfirst-reader v1.0.1
+	gocloud.dev v0.34.0
 )
 
 require (
@@ -21,6 +24,9 @@ require (
 	github.com/fogleman/contourmap v0.0.0-20190814184649-9f61d36c4199 // indirect
 	github.com/fogleman/gg v1.3.0 // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
+	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
+	github.com/golang/protobuf v1.5.3 // indirect
+	github.com/googleapis/gax-go/v2 v2.12.0 // indirect
 	github.com/hashicorp/errwrap v1.0.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/paulmach/orb v0.7.0 // indirect
@@ -32,7 +38,14 @@ require (
 	github.com/whosonfirst/go-ioutil v1.0.2 // indirect
 	github.com/whosonfirst/go-whosonfirst-sources v0.1.0 // indirect
 	github.com/whosonfirst/go-whosonfirst-uri v1.2.0 // indirect
+	go.opencensus.io v0.24.0 // indirect
 	golang.org/x/image v0.12.0 // indirect
 	golang.org/x/net v0.13.0 // indirect
+	golang.org/x/sys v0.10.0 // indirect
 	golang.org/x/text v0.13.0 // indirect
+	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
+	google.golang.org/api v0.134.0 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20230731193218-e0aa005b6bdf // indirect
+	google.golang.org/grpc v1.57.0 // indirect
+	google.golang.org/protobuf v1.31.0 // indirect
 )
