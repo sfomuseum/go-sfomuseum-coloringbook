@@ -10,10 +10,13 @@ import (
 	"github.com/go-pdf/fpdf"
 	"github.com/sfomuseum/go-flags/flagset"
 	"github.com/sfomuseum/go-sfomuseum-colouringbook"
+	sfom_writer "github.com/sfomuseum/go-sfomuseum-writer/v3"
 	"github.com/tidwall/gjson"
 	"github.com/whosonfirst/go-reader"
 	_ "github.com/whosonfirst/go-reader-http"
+	"github.com/whosonfirst/go-whosonfirst-export/v2"
 	wof_reader "github.com/whosonfirst/go-whosonfirst-reader"
+	"github.com/whosonfirst/go-writer/v3"
 	_ "gocloud.dev/blob/fileblob"
 )
 
@@ -22,8 +25,10 @@ func main() {
 	var object_image string
 	var object_id int64
 	var reader_uri string
+	var writer_uri string
 	var bucket_uri string
 	var filename string
+	var update_object bool
 
 	fs := flagset.NewFlagSet("colouringbook")
 
@@ -32,6 +37,8 @@ func main() {
 	fs.StringVar(&reader_uri, "reader-uri", "https://static.sfomuseum.org/data/", "...")
 	fs.StringVar(&bucket_uri, "bucket-uri", "cwd://", "...")
 	fs.StringVar(&filename, "filename", "", "...")
+	fs.StringVar(&writer_uri, "writer-uri", "stdout://", "...")
+	fs.BoolVar(&update_object, "update-object", false, "...")
 
 	flagset.Parse(fs)
 
@@ -41,6 +48,17 @@ func main() {
 
 	if err != nil {
 		log.Fatalf("Failed to create reader, %v", err)
+	}
+
+	var wr writer.Writer
+
+	if update_object {
+
+		wr, err = writer.NewWriter(ctx, writer_uri)
+
+		if err != nil {
+			log.Fatalf("Failed to create new writer, %v", err)
+		}
 	}
 
 	// Set up bucket
@@ -129,13 +147,13 @@ func main() {
 		filename = fmt.Sprintf("%d-coloringbook.pdf", object_id)
 	}
 
-	wr, err := bucket.NewWriter(ctx, filename, nil)
+	pdf_wr, err := bucket.NewWriter(ctx, filename, nil)
 
 	if err != nil {
 		log.Fatalf("Failed to create new writer for %s, %v", filename, err)
 	}
 
-	err = pdf.OutputAndClose(wr)
+	err = pdf.OutputAndClose(pdf_wr)
 
 	if err != nil {
 		log.Fatalf("Failed to write %s, %v", filename, err)
@@ -143,5 +161,33 @@ func main() {
 
 	log.Printf("Wrote %s\n", filename)
 
-	// Update object record here...
+	// Update object record
+
+	if update_object {
+
+		updates := map[string]interface{}{
+			"properties.millsfield:has_coloring_book": 1,
+		}
+
+		has_updates, new_body, err := export.AssignPropertiesIfChanged(ctx, body, updates)
+
+		if err != nil {
+			log.Fatalf("Failed to assign updates to object record, %v", err)
+		}
+
+		if has_updates {
+
+			_, err := sfom_writer.WriteBytes(ctx, wr, new_body)
+
+			if err != nil {
+				log.Fatalf("Failed to update object record, %v", err)
+			}
+
+			err = wr.Close(ctx)
+
+			if err != nil {
+				log.Fatalf("Failed to close object update writer, %v", err)
+			}
+		}
+	}
 }
