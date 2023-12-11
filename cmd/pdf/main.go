@@ -8,7 +8,9 @@ import (
 	_ "image/png"
 	"log"
 	"os"
+	"path/filepath"
 
+	_ "github.com/aaronland/gocloud-blob-s3"
 	aa_bucket "github.com/aaronland/gocloud-blob/bucket"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/go-pdf/fpdf"
@@ -20,6 +22,7 @@ import (
 	_ "github.com/whosonfirst/go-reader-http"
 	"github.com/whosonfirst/go-whosonfirst-export/v2"
 	wof_reader "github.com/whosonfirst/go-whosonfirst-reader"
+	"github.com/whosonfirst/go-whosonfirst-uri"
 	"github.com/whosonfirst/go-writer/v3"
 	_ "gocloud.dev/blob/fileblob"
 )
@@ -33,6 +36,7 @@ func main() {
 	var bucket_uri string
 	var filename string
 	var update_object bool
+	var append_tree bool
 
 	var mode string
 
@@ -46,6 +50,7 @@ func main() {
 	fs.StringVar(&writer_uri, "writer-uri", "stdout://", "...")
 	fs.BoolVar(&update_object, "update-object", false, "...")
 	fs.StringVar(&mode, "mode", "cli", "...")
+	fs.BoolVar(&append_tree, "append-tree", false, "...")
 
 	flagset.Parse(fs)
 
@@ -180,6 +185,17 @@ func main() {
 
 		if filename == "" {
 			filename = fmt.Sprintf("%d-coloringbook.pdf", object_id)
+		}
+
+		if append_tree {
+
+			tree, err := uri.Id2Path(object_id)
+
+			if err != nil {
+				return fmt.Errorf("Failed to derive tree for object id %d, %w", object_id, err)
+			}
+
+			filename = filepath.Join(tree, filename)
 		}
 
 		pdf_wr, err := bucket.NewWriter(ctx, filename, nil)

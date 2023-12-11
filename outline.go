@@ -104,7 +104,7 @@ func Trace(ctx context.Context, input string, output string, opts *TraceOptions)
 }
 
 func Vtrace(ctx context.Context, input string, output string) error {
-	
+
 	cmd := "vtracer"
 
 	args := []string{
