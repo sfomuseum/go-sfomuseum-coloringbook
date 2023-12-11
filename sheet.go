@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"image"
 	"io"
+	"log"
 	"os"
 
 	"github.com/boombuler/barcode/qr"
@@ -31,20 +32,38 @@ func AddSheet(ctx context.Context, pdf *fpdf.Fpdf, opts *AddSheetOptions) error 
 	margin_x := 1.375
 	margin_y := 0.75
 
-	max_w := 8.25
-	max_h := 6.375
+	max_w := 11.0 - (margin_x * 2) // 8.25
+	max_h := 8.5 - (margin_y * 2)  // 6.375
 
 	qr_w := 0.4
 	qr_h := 0.4
 	qr_margin := 0.5
 
-	footer_y := 7.25 // derive from max_h + something
+	footer_y := max_h + 0.75 // 7.25 // derive from max_h + something
 	line_h := 0.15
 
 	logo_w := 1.29
 	logo_h := 0.4
 
-	// To do: things in portrait mode...
+	if Orientation(opts.Image) == "P" {
+
+		max_h = 10.25 - (margin_y * 2) // 8.25
+		max_w = 8.5 - (margin_x * 2)   // 6.375
+
+		footer_y = max_h + 0.9
+	}
+
+	dims := opts.Image.Bounds()
+	im_w := float64(dims.Max.X)
+	im_h := float64(dims.Max.Y)
+
+	if im_h > max_h*dpi {
+		log.Println("TOO TALL")
+	}
+
+	if im_w > max_w*dpi {
+		log.Println("TOO WIDE")
+	}
 
 	pdf.SetFont("Helvetica", "", 8)
 
@@ -75,7 +94,10 @@ func AddSheet(ctx context.Context, pdf *fpdf.Fpdf, opts *AddSheetOptions) error 
 
 	blurb := fmt.Sprintf("%s (%s)\n%s\n%s", opts.Title, opts.Date, opts.CreditLine, opts.AccessionNumber)
 
-	pdf.MultiCell(max_w-qr_margin-logo_w, line_h, blurb, "", "", false)
+	cell_x := max_w - qr_margin - logo_w
+	cell_y := line_h
+
+	pdf.MultiCell(cell_x, cell_y, blurb, "", "", false)
 
 	// Add SFO Museum logo
 
