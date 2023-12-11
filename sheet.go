@@ -3,6 +3,7 @@ package colouringbook
 import (
 	"context"
 	"fmt"
+	"image"
 	"io"
 	"os"
 
@@ -13,7 +14,9 @@ import (
 )
 
 type AddSheetOptions struct {
-	Image           string
+	Image           image.Image
+	ImageReader     io.Reader
+	ImagePath       string
 	Title           string
 	Date            string
 	CreditLine      string
@@ -22,6 +25,8 @@ type AddSheetOptions struct {
 }
 
 func AddSheet(ctx context.Context, pdf *fpdf.Fpdf, opts *AddSheetOptions) error {
+
+	dpi := 150.0
 
 	margin_x := 1.375
 	margin_y := 0.75
@@ -45,23 +50,15 @@ func AddSheet(ctx context.Context, pdf *fpdf.Fpdf, opts *AddSheetOptions) error 
 
 	pdf.AddPage()
 
-	r, err := os.Open(opts.Image)
-
-	if err != nil {
-		return fmt.Errorf("Failed to open image for reading, %w", err)
-	}
-
-	defer r.Close()
-
 	im_opts := fpdf.ImageOptions{
 		ImageType: "png",
 		ReadDpi:   false,
 	}
 
-	info := pdf.RegisterImageOptionsReader(opts.Image, im_opts, r)
-	info.SetDpi(150)
+	info := pdf.RegisterImageOptionsReader(opts.ImagePath, im_opts, opts.ImageReader)
+	info.SetDpi(dpi)
 
-	pdf.ImageOptions(opts.Image, margin_x, margin_y, max_w, max_h, false, im_opts, 0, "")
+	pdf.ImageOptions(opts.ImagePath, margin_x, margin_y, max_w, max_h, false, im_opts, 0, "")
 
 	// QR code
 

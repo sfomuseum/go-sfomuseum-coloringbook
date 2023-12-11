@@ -16,6 +16,20 @@ import (
 	wof_reader "github.com/whosonfirst/go-whosonfirst-reader"
 )
 
+func Orientation(im image.Image) string {
+
+	bounds := im.Bounds()
+
+	w := bounds.Max.X
+	h := bounds.Max.Y
+
+	if h > w {
+		return "P"
+	}
+
+	return "L"
+}
+
 func DeriveObjectImage(ctx context.Context, r reader.Reader, image_id int64) (string, error) {
 
 	im_body, err := wof_reader.LoadBytes(ctx, r, image_id)
