@@ -1,6 +1,8 @@
 FROM rust:latest AS rusttools
 
-RUN cargo install vtracer
+RUN rustup target add x86_64-unknown-linux-gnu \
+    && rustup target add aarch64-unknown-linux-gnu \
+    && cargo install --target aarch64-unknown-linux-gnu vtracer
 
 FROM golang:1.21-alpine as gotools
 
