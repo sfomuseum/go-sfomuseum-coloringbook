@@ -151,8 +151,6 @@ func main() {
 
 		orientation := colouringbook.Orientation(im)
 
-		log.Println("O", orientation)
-
 		im_r.Seek(0, 0)
 
 		// Create PDF

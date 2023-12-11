@@ -113,6 +113,8 @@ func AddSheet(ctx context.Context, pdf *fpdf.Fpdf, opts *AddSheetOptions) error 
 
 	if im_h > im_w {
 		im_x = margin_x + ((max_w - im_w) / 2.0)
+	} else {
+		im_y = margin_y + ((max_h - im_h) / 4.0)
 	}
 
 	pdf.SetFont("Helvetica", "", 8)
