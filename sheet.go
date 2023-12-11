@@ -4,10 +4,11 @@ import (
 	"context"
 	"fmt"
 	"image"
+	"image/png"
 	"io"
-	"log"
 	"os"
 
+	"github.com/aaronland/go-image/resize"
 	"github.com/boombuler/barcode/qr"
 	"github.com/go-pdf/fpdf"
 	"github.com/go-pdf/fpdf/contrib/barcode"
@@ -39,7 +40,7 @@ func AddSheet(ctx context.Context, pdf *fpdf.Fpdf, opts *AddSheetOptions) error 
 	qr_h := 0.4
 	qr_margin := 0.5
 
-	footer_y := max_h + 0.75 // 7.25 // derive from max_h + something
+	footer_y := max_h + 0.25 // 7.25 // derive from max_h + something
 	line_h := 0.15
 
 	logo_w := 1.29
@@ -54,15 +55,64 @@ func AddSheet(ctx context.Context, pdf *fpdf.Fpdf, opts *AddSheetOptions) error 
 	}
 
 	dims := opts.Image.Bounds()
-	im_w := float64(dims.Max.X)
-	im_h := float64(dims.Max.Y)
+	im_w := float64(dims.Max.X) / dpi
+	im_h := float64(dims.Max.Y) / dpi
 
-	if im_h > max_h*dpi {
-		log.Println("TOO TALL")
+	im_x := margin_x
+	im_y := margin_y * 0.75
+
+	// Scale image if necessary
+
+	if im_h > max_h || im_w > max_w {
+
+		max_dim := max(max_w, max_h)
+
+		new_im, err := resize.ResizeImage(ctx, opts.Image, int(max_dim*dpi))
+
+		if err != nil {
+			return fmt.Errorf("Failed to resize image, %w", err)
+		}
+
+		resized_fh, err := os.CreateTemp("", "*.png")
+
+		if err != nil {
+			return fmt.Errorf("Failed to create resized temp file, %w", err)
+		}
+
+		resized_path := resized_fh.Name()
+		defer os.Remove(resized_path)
+
+		err = png.Encode(resized_fh, new_im)
+
+		if err != nil {
+			return fmt.Errorf("Failed to write resized image, %w", err)
+		}
+
+		err = resized_fh.Close()
+
+		if err != nil {
+			return fmt.Errorf("Failed to close resized image after writing, %w", err)
+		}
+
+		resized_r, err := os.Open(resized_path)
+
+		if err != nil {
+			return fmt.Errorf("Failed to open %s for reading, %w", resized_path, err)
+		}
+
+		defer resized_r.Close()
+
+		opts.Image = new_im
+		opts.ImagePath = resized_path
+		opts.ImageReader = resized_r
+
+		new_dims := new_im.Bounds()
+		im_w = float64(new_dims.Max.X) / dpi
+		im_h = float64(new_dims.Max.Y) / dpi
 	}
 
-	if im_w > max_w*dpi {
-		log.Println("TOO WIDE")
+	if im_h > im_w {
+		im_x = margin_x + ((max_w - im_w) / 2.0)
 	}
 
 	pdf.SetFont("Helvetica", "", 8)
@@ -77,7 +127,7 @@ func AddSheet(ctx context.Context, pdf *fpdf.Fpdf, opts *AddSheetOptions) error 
 	info := pdf.RegisterImageOptionsReader(opts.ImagePath, im_opts, opts.ImageReader)
 	info.SetDpi(dpi)
 
-	pdf.ImageOptions(opts.ImagePath, margin_x, margin_y, max_w, max_h, false, im_opts, 0, "")
+	pdf.ImageOptions(opts.ImagePath, im_x, im_y, im_w, im_h, false, im_opts, 0, "")
 
 	// QR code
 

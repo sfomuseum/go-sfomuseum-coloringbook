@@ -3,6 +3,7 @@ module github.com/sfomuseum/go-sfomuseum-colouringbook
 go 1.21.5
 
 require (
+	github.com/aaronland/go-image v1.2.2
 	github.com/aaronland/go-image-contour v1.0.2
 	github.com/aaronland/gocloud-blob v0.0.13
 	github.com/boombuler/barcode v1.0.1
@@ -23,7 +24,6 @@ require (
 require (
 	github.com/aaronland/go-artisanal-integers v0.9.1 // indirect
 	github.com/aaronland/go-brooklynintegers-api v1.2.7 // indirect
-	github.com/aaronland/go-image v1.2.2 // indirect
 	github.com/aaronland/go-log/v2 v2.0.0 // indirect
 	github.com/aaronland/go-pool/v2 v2.0.0 // indirect
 	github.com/aaronland/go-roster v1.0.0 // indirect
@@ -45,6 +45,7 @@ require (
 	github.com/hashicorp/errwrap v1.0.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/natefinch/atomic v1.0.1 // indirect
+	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 // indirect
 	github.com/paulmach/orb v0.10.0 // indirect
 	github.com/ruudk/golang-pdf417 v0.0.0-20201230142125-a7e3863a1245 // indirect
 	github.com/sfomuseum/go-edtf v1.1.1 // indirect
