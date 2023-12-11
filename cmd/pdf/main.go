@@ -10,6 +10,7 @@ import (
 	"os"
 
 	aa_bucket "github.com/aaronland/gocloud-blob/bucket"
+	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/go-pdf/fpdf"
 	"github.com/sfomuseum/go-flags/flagset"
 	"github.com/sfomuseum/go-sfomuseum-colouringbook"
@@ -234,7 +235,17 @@ func main() {
 	case "cli":
 		run(ctx, object_id)
 	case "lambda":
-		log.Fatalf("Not implemented")
+
+		type ColouringBookRequest struct {
+			ObjectId int64 `json:"object_id"`
+		}
+
+		handler := func(ctx context.Context, req *ColouringBookRequest) error {
+			return run(ctx, req.ObjectId)
+		}
+
+		lambda.Start(handler)
+
 	default:
 		log.Fatalf("Invalid mode")
 	}

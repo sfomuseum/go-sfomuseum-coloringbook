@@ -37,6 +37,8 @@ github.com/aaronland/go-uid-whosonfirst v0.0.4/go.mod h1:2lyRTjFRNxS2hggKl60UZzV
 github.com/aaronland/gocloud-blob v0.0.13 h1:SdM8qRfJjXSa9x1GRonBjFvO6VJ8OUjXroBCOAY2Gdg=
 github.com/aaronland/gocloud-blob v0.0.13/go.mod h1:EvV6oueIg46WEUoiD622A1icwq4Tn5SXZIOgfe8pCpM=
 github.com/andreyvit/diff v0.0.0-20170406064948-c7f18ee00883/go.mod h1:rCTlJbsFo29Kk6CurOXKm700vrz8f0KW0JNfpkRJY/8=
+github.com/aws/aws-lambda-go v1.42.0 h1:U4QKkxLp/il15RJGAANxiT9VumQzimsUER7gokqA0+c=
+github.com/aws/aws-lambda-go v1.42.0/go.mod h1:dpMpZgvWx5vuQJfBt0zqBha60q7Dd7RfgJv23DymV8A=
 github.com/aws/aws-sdk-go v1.44.324 h1:/uja9PtgeeqrZCPOJTenjMLNpciIMuzaRKooq+erG4A=
 github.com/aws/aws-sdk-go v1.44.324/go.mod h1:aVsgQcEevwlmQ7qHE9I3h+dtQgpqhFB+i8Phjh7fkwI=
 github.com/aws/aws-sdk-go-v2 v1.20.0 h1:INUDpYLt4oiPOJl0XwZDK2OVAVf0Rzo+MGVTv9f+gy8=

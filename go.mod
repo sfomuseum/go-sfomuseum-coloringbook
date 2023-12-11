@@ -6,6 +6,7 @@ require (
 	github.com/aaronland/go-image v1.2.2
 	github.com/aaronland/go-image-contour v1.0.2
 	github.com/aaronland/gocloud-blob v0.0.13
+	github.com/aws/aws-lambda-go v1.42.0
 	github.com/boombuler/barcode v1.0.1
 	github.com/go-pdf/fpdf v0.9.0
 	github.com/jtacoma/uritemplates v1.0.0
