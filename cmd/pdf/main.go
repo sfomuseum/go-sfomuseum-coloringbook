@@ -10,7 +10,7 @@ import (
 	"os"
 	"path/filepath"
 
-	_ "github.com/aaronland/gocloud-blob-s3"
+	"github.com/aaronland/gocloud-blob-s3"
 	aa_bucket "github.com/aaronland/gocloud-blob/bucket"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/go-pdf/fpdf"
@@ -23,6 +23,7 @@ import (
 	"github.com/whosonfirst/go-whosonfirst-export/v2"
 	wof_reader "github.com/whosonfirst/go-whosonfirst-reader"
 	"github.com/whosonfirst/go-whosonfirst-uri"
+	gh_writer "github.com/whosonfirst/go-writer-github/v3"
 	"github.com/whosonfirst/go-writer/v3"
 	_ "gocloud.dev/blob/fileblob"
 )
@@ -37,6 +38,7 @@ func main() {
 	var filename string
 	var update_object bool
 	var append_tree bool
+	var access_token_uri string
 
 	var mode string
 
@@ -51,6 +53,7 @@ func main() {
 	fs.BoolVar(&update_object, "update-object", false, "...")
 	fs.StringVar(&mode, "mode", "cli", "...")
 	fs.BoolVar(&append_tree, "append-tree", false, "...")
+	fs.StringVar(&access_token_uri, "access-token-uri", "", "...")
 
 	flagset.Parse(fs)
 
@@ -71,6 +74,16 @@ func main() {
 	var wr writer.Writer
 
 	if update_object {
+
+		if access_token_uri != "" {
+
+			writer_uri, err = gh_writer.EnsureGitHubAccessToken(ctx, writer_uri, access_token_uri)
+
+			if err != nil {
+				log.Fatalf("Failed to ensure access token, %v", err)
+			}
+
+		}
 
 		wr, err = writer.NewWriter(ctx, writer_uri)
 
@@ -117,17 +130,17 @@ func main() {
 
 		url := fmt.Sprintf("https://collection.sfomuseum.org/objects/%d/", object_id)
 
+		primary_rsp := gjson.GetBytes(body, "properties.millsfield:primary_image")
+
+		if !primary_rsp.Exists() {
+			return fmt.Errorf("Object is missing primary image property")
+		}
+
+		image_id := primary_rsp.Int()
+
 		// Derive contoured image if necessary
 
 		if object_image == "" {
-
-			primary_rsp := gjson.GetBytes(body, "properties.millsfield:primary_image")
-
-			if !primary_rsp.Exists() {
-				return fmt.Errorf("Object is missing primary image property")
-			}
-
-			image_id := primary_rsp.Int()
 
 			derived_image, err := colouringbook.DeriveObjectImage(ctx, r, image_id)
 
@@ -184,7 +197,7 @@ func main() {
 		// Publish PDF file
 
 		if filename == "" {
-			filename = fmt.Sprintf("%d-coloringbook.pdf", object_id)
+			filename = fmt.Sprintf("%d-%d-coloringbook.pdf", object_id, image_id)
 		}
 
 		if append_tree {
@@ -198,7 +211,7 @@ func main() {
 			filename = filepath.Join(tree, filename)
 		}
 
-		pdf_wr, err := bucket.NewWriter(ctx, filename, nil)
+		pdf_wr, err := s3blob.NewWriterWithACL(ctx, bucket, filename, "public-read")
 
 		if err != nil {
 			return fmt.Errorf("Failed to create new writer for %s, %v", filename, err)
