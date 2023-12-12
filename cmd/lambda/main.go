@@ -19,10 +19,10 @@ func main() {
 	flag.Parse()
 
 	ctx := context.Background()
-
 	err := colouringbook.GenerateColouringBookLambda(ctx, function_uri, object_id)
 
 	if err != nil {
-		log.Fatalf("Failed to invoke Lambda function, %v", err)
+		log.Fatalf("Failed to invoke Lambda function for %v", err)
 	}
+
 }

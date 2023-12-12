@@ -6,7 +6,7 @@ import (
 	"image"
 	"image/png"
 	"io"
-	_ "log"
+	"log"
 	"os"
 
 	"github.com/aaronland/go-image/resize"
@@ -99,10 +99,14 @@ func AddSheet(ctx context.Context, pdf *fpdf.Fpdf, opts *AddSheetOptions) error 
 
 			ratio := max_w / im_w
 
+			log.Println("HELLO", ratio)
+
 			if im_h > im_w {
 				max_dim = max_h
 
 				w := im_w * ratio
+
+				log.Println("WUT", w, max_w)
 
 				if w > max_w {
 					max_dim = max_w
@@ -171,6 +175,9 @@ func AddSheet(ctx context.Context, pdf *fpdf.Fpdf, opts *AddSheetOptions) error 
 		// log.Println("FFFFUUUUU", im_w, im_h)
 	}
 
+	log.Printf("MAX w %02f h %02f\n", max_w, max_h)
+	log.Printf("IMAGE w %02f h %02f\n", im_w, im_h)
+
 	if im_w > max_w {
 		return fmt.Errorf("Image width (%02f) is still greater than max width (%02f)", im_w, max_w)
 	}
@@ -181,6 +188,8 @@ func AddSheet(ctx context.Context, pdf *fpdf.Fpdf, opts *AddSheetOptions) error 
 
 	im_x = margin_x + ((max_w - im_w) / 2.0)
 	im_y = margin_y + ((max_h - im_h) / 4.0)
+
+	log.Printf("OFFSET w %02f h %02f\n", im_x, im_y)
 
 	pdf.SetFont("Helvetica", "", 8)
 
