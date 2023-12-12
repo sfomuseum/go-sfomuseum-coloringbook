@@ -6,7 +6,7 @@ import (
 	"image"
 	"image/png"
 	"io"
-	"log"
+	_ "log"
 	"os"
 
 	"github.com/aaronland/go-image/resize"
@@ -42,8 +42,6 @@ func AddSheet(ctx context.Context, pdf *fpdf.Fpdf, opts *AddSheetOptions) error 
 
 	footer_y := letter_w - (margin_y * 2.4) // max_h + 0.1
 
-	log.Println("WUT", max_h)
-
 	qr_w := 0.4
 	qr_h := 0.4
 	qr_margin := 0.5
@@ -68,8 +66,8 @@ func AddSheet(ctx context.Context, pdf *fpdf.Fpdf, opts *AddSheetOptions) error 
 	im_x := margin_x
 	im_y := margin_y
 
-	log.Println("W", max_w, im_w)
-	log.Println("H", max_h, im_h)
+	// log.Println("W", max_w, im_w)
+	// log.Println("H", max_h, im_h)
 
 	// Scale image if necessary
 
@@ -116,18 +114,12 @@ func AddSheet(ctx context.Context, pdf *fpdf.Fpdf, opts *AddSheetOptions) error 
 
 		}
 
-		log.Println("RESIZE A", max_dim)
-
 	} else if im_h > max_h {
 		resize_image = true
 		max_dim = max_h
-
-		log.Println("RESIZE B", max_dim)
 	} else if im_w > max_w {
 		resize_image = true
 		max_dim = max_w
-
-		log.Println("RESIZE C", max_dim)
 	} else {
 	}
 
@@ -176,18 +168,19 @@ func AddSheet(ctx context.Context, pdf *fpdf.Fpdf, opts *AddSheetOptions) error 
 		im_w = float64(new_dims.Max.X) / dpi
 		im_h = float64(new_dims.Max.Y) / dpi
 
-		log.Println("FFFFUUUUU", im_w, im_h)
+		// log.Println("FFFFUUUUU", im_w, im_h)
 	}
 
-	// if im_h > im_w && im_w < max_w {
-	im_x = margin_x + ((max_w - im_w) / 2.0)
-	log.Printf("OMG %02f = %02f + ((%02f - %02f) / 2.0)\n", im_x, margin_x, max_w, im_w)
-	// } else {
-	im_y = margin_y + ((max_h - im_h) / 4.0)
-	log.Printf("OMG %02f = %02f + ((%02f - %02f) / 2.0)\n", im_y, margin_y, max_h, im_h)
-	// }
+	if im_w > max_w {
+		return fmt.Errorf("Image width (%02f) is still greater than max width (%02f)", im_w, max_w)
+	}
 
-	log.Printf("BBQ %02f, %02f @ %02f, %02f\n", im_x, im_y, im_w, im_h)
+	if im_h > max_h {
+		return fmt.Errorf("Image height (%02f) is still greater than max height (%02f)", im_h, max_h)
+	}
+
+	im_x = margin_x + ((max_w - im_w) / 2.0)
+	im_y = margin_y + ((max_h - im_h) / 4.0)
 
 	pdf.SetFont("Helvetica", "", 8)
 
