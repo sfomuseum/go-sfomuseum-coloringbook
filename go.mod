@@ -3,6 +3,7 @@ module github.com/sfomuseum/go-sfomuseum-colouringbook
 go 1.21.5
 
 require (
+	github.com/aaronland/go-aws-lambda v0.0.8
 	github.com/aaronland/go-image v1.2.2
 	github.com/aaronland/gocloud-blob v0.0.13
 	github.com/aaronland/gocloud-blob-s3 v0.2.4
@@ -39,7 +40,7 @@ require (
 	github.com/aaronland/go-uid-artisanal v0.0.4 // indirect
 	github.com/aaronland/go-uid-proxy v0.1.1 // indirect
 	github.com/aaronland/go-uid-whosonfirst v0.0.4 // indirect
-	github.com/aws/aws-sdk-go v1.49.0 // indirect
+	github.com/aws/aws-sdk-go v1.49.1 // indirect
 	github.com/aws/aws-sdk-go-v2 v1.23.1 // indirect
 	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.5.1 // indirect
 	github.com/aws/aws-sdk-go-v2/config v1.25.5 // indirect

@@ -38,9 +38,9 @@ func AddSheet(ctx context.Context, pdf *fpdf.Fpdf, opts *AddSheetOptions) error 
 	margin_y := 0.5
 
 	max_w := letter_h - (margin_x * 2)
-	max_h := letter_w - (margin_y * 2.6)
+	max_h := letter_w - (margin_y * 2.25)
 
-	footer_y := 8.5 - (margin_y * 2.5) // max_h + 0.1
+	footer_y := letter_w - (margin_y * 2.4) // max_h + 0.1
 
 	log.Println("WUT", max_h)
 
@@ -54,9 +54,11 @@ func AddSheet(ctx context.Context, pdf *fpdf.Fpdf, opts *AddSheetOptions) error 
 	logo_h := 0.4
 
 	if Orientation(opts.Image) == "P" {
-		max_h = letter_h - (margin_y * 2.6)
+
+		max_h = letter_h - (margin_y * 3.75)
 		max_w = letter_w - (margin_x * 2)
-		footer_y = 11.0 - (margin_y * 2.5) // max_h + 0.9
+
+		footer_y = letter_h - (margin_y * 2.4)
 	}
 
 	dims := opts.Image.Bounds()
@@ -66,18 +68,56 @@ func AddSheet(ctx context.Context, pdf *fpdf.Fpdf, opts *AddSheetOptions) error 
 	im_x := margin_x
 	im_y := margin_y
 
+	log.Println("W", max_w, im_w)
+	log.Println("H", max_h, im_h)
+
 	// Scale image if necessary
 
 	resize_image := false
 	max_dim := 0.0
 
-	// To do: Actually determine scale factor/size here...
-
 	if im_h > max_h && im_w > max_w {
+
 		resize_image = true
-		max_dim = min(max_w, max_h)
+
+		if max_w > max_h {
+
+			ratio := max_w / im_w
+
+			if im_w > im_h {
+				max_dim = max_w
+
+				h := im_h * ratio
+
+				if h > max_h {
+					max_dim = max_h
+				}
+
+			} else {
+				max_dim = im_h * ratio
+			}
+
+		} else {
+
+			ratio := max_w / im_w
+
+			if im_h > im_w {
+				max_dim = max_h
+
+				w := im_w * ratio
+
+				if w > max_w {
+					max_dim = max_w
+				}
+
+			} else {
+				max_dim = im_h * ratio
+			}
+
+		}
 
 		log.Println("RESIZE A", max_dim)
+
 	} else if im_h > max_h {
 		resize_image = true
 		max_dim = max_h

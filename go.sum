@@ -16,6 +16,8 @@ cloud.google.com/go/storage v1.35.1/go.mod h1:M6M/3V/D3KpzMTJyPOR/HU6n2Si5QdaXYE
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/aaronland/go-artisanal-integers v0.9.1 h1:VnTR0sTbgCKlFS3dDv3MEJ5KZn9K7llzAlTyJW3W07A=
 github.com/aaronland/go-artisanal-integers v0.9.1/go.mod h1:/KpdlAI8n4re3/aSkz5koLU+UxXDwPpP7Nxzmg89UMA=
+github.com/aaronland/go-aws-lambda v0.0.8 h1:As+XQDqrog1CVGnobGQO2/qli2iboarFAQw8Ir9GTaU=
+github.com/aaronland/go-aws-lambda v0.0.8/go.mod h1:3eYmZKhTwwRwg+xjY8hTfT0VzJU8nWcSDoJ+wNIBdjg=
 github.com/aaronland/go-aws-session v0.2.1 h1:sNCuxR1w2ng8fxHsl08AFcAWvZqmN4hmnBbBRNRORd0=
 github.com/aaronland/go-aws-session v0.2.1/go.mod h1:M5imkutLPvwnI1Bb38minI3TCy1eSvwP6odMtCmBzqk=
 github.com/aaronland/go-brooklynintegers-api v1.2.7 h1:NpMlXLI9UU0l+IfA8Vy9EB3PCEedL1sEvSa2Ois3BSE=
@@ -45,8 +47,8 @@ github.com/aaronland/gocloud-blob-s3 v0.2.4/go.mod h1:BXVpfkl8Y1jLu0/sh40iSE0msW
 github.com/andreyvit/diff v0.0.0-20170406064948-c7f18ee00883/go.mod h1:rCTlJbsFo29Kk6CurOXKm700vrz8f0KW0JNfpkRJY/8=
 github.com/aws/aws-lambda-go v1.42.0 h1:U4QKkxLp/il15RJGAANxiT9VumQzimsUER7gokqA0+c=
 github.com/aws/aws-lambda-go v1.42.0/go.mod h1:dpMpZgvWx5vuQJfBt0zqBha60q7Dd7RfgJv23DymV8A=
-github.com/aws/aws-sdk-go v1.49.0 h1:g9BkW1fo9GqKfwg2+zCD+TW/D36Ux+vtfJ8guF4AYmY=
-github.com/aws/aws-sdk-go v1.49.0/go.mod h1:LF8svs817+Nz+DmiMQKTO3ubZ/6IaTpq3TjupRn3Eqk=
+github.com/aws/aws-sdk-go v1.49.1 h1:Dsamcd8d/nNb3A+bZ0ucfGl0vGZsW5wlRW0vhoYGoeQ=
+github.com/aws/aws-sdk-go v1.49.1/go.mod h1:LF8svs817+Nz+DmiMQKTO3ubZ/6IaTpq3TjupRn3Eqk=
 github.com/aws/aws-sdk-go-v2 v1.23.1 h1:qXaFsOOMA+HsZtX8WoCa+gJnbyW7qyFFBlPqvTSzbaI=
 github.com/aws/aws-sdk-go-v2 v1.23.1/go.mod h1:i1XDttT4rnf6vxc9AuskLc6s7XBee8rlLilKlc03uAA=
 github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.5.1 h1:ZY3108YtBNq96jNZTICHxN1gSBSbnvIdYwwqnvCV4Mc=

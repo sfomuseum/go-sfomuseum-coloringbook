@@ -266,11 +266,7 @@ func main() {
 		run(ctx, object_id)
 	case "lambda":
 
-		type ColouringBookRequest struct {
-			ObjectId int64 `json:"object_id"`
-		}
-
-		handler := func(ctx context.Context, req *ColouringBookRequest) error {
+		handler := func(ctx context.Context, req *colouringbook.ColouringBookRequest) error {
 			return run(ctx, req.ObjectId)
 		}
 

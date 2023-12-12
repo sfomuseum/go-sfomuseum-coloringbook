@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"strconv"
 
 	"github.com/fogleman/colormap"
 	"github.com/fogleman/contourmap"
@@ -105,7 +106,7 @@ func Contour(ctx context.Context, im image.Image, iterations int, scale float64)
 		contours := m.Contours(z + 1e-9)
 
 		// Do line smoothing here?
-		
+
 		for _, c := range contours {
 
 			dc.NewSubPath()
@@ -150,6 +151,9 @@ func Trace(ctx context.Context, input string, output string, opts *TraceOptions)
 
 func Vtrace(ctx context.Context, input string, output string) error {
 
+	precision := 6
+	speckle := 8
+
 	cmd := "vtracer"
 
 	args := []string{
@@ -158,9 +162,9 @@ func Vtrace(ctx context.Context, input string, output string) error {
 		"-o",
 		output,
 		"--color_precision",
-		"8",
+		strconv.Itoa(precision),
 		"--filter_speckle",
-		"8",
+		strconv.Itoa(speckle),
 	}
 
 	return exec.CommandContext(ctx, cmd, args...).Run()
