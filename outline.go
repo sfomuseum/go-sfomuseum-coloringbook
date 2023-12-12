@@ -9,7 +9,9 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/aaronland/go-image-contour"
+	"github.com/fogleman/colormap"
+	"github.com/fogleman/contourmap"
+	"github.com/fogleman/gg"
 	"github.com/sfomuseum/go-svg"
 )
 
@@ -69,7 +71,7 @@ func GenerateOutline(ctx context.Context, im image.Image, opts *OutlineOptions) 
 
 	log.Println("CONTOUR")
 
-	iterations := 8
+	iterations := 5
 	scale := 1.0
 
 	contoured_im, err := Contour(ctx, traced_im, iterations, scale)
@@ -83,49 +85,44 @@ func GenerateOutline(ctx context.Context, im image.Image, opts *OutlineOptions) 
 
 func Contour(ctx context.Context, im image.Image, iterations int, scale float64) (image.Image, error) {
 
-	return contour.ContourImage(ctx, im, iterations, scale)
+	m := contourmap.FromImage(im).Closed()
+	z0 := m.Min
+	z1 := m.Max
 
-	/*
+	w := int(float64(m.W) * scale)
+	h := int(float64(m.H) * scale)
 
-		"github.com/fogleman/colormap"
-		"github.com/fogleman/contourmap"
-		"github.com/fogleman/gg"
+	dc := gg.NewContext(w, h)
+	dc.SetRGB(1, 1, 1)
+	dc.SetColor(colormap.ParseColor("FFFFFF"))
+	dc.Clear()
+	dc.Scale(scale, scale)
 
-		m := contourmap.FromImage(im).Closed()
-		z0 := m.Min
-		z1 := m.Max
+	for i := 0; i < iterations; i++ {
 
-		w := int(float64(m.W) * scale)
-		h := int(float64(m.H) * scale)
+		t := float64(i) / (float64(iterations) - 1)
+		z := z0 + (z1-z0)*t
+		contours := m.Contours(z + 1e-9)
 
-		dc := gg.NewContext(w, h)
-		dc.SetRGB(1, 1, 1)
-		dc.SetColor(colormap.ParseColor("FFFFFF"))
-		dc.Clear()
-		dc.Scale(scale, scale)
+		// Do line smoothing here?
+		
+		for _, c := range contours {
 
-		for i := 0; i < n; i++ {
+			dc.NewSubPath()
 
-			t := float64(i) / (float64(n) - 1)
-			z := z0 + (z1-z0)*t
-			contours := m.Contours(z + 1e-9)
-
-			for _, c := range contours {
-
-				dc.NewSubPath()
-
-				for _, p := range c {
-					dc.LineTo(p.X, p.Y)
-				}
+			for _, p := range c {
+				dc.LineTo(p.X, p.Y)
 			}
-
-			dc.SetRGB(0, 0, 0)
-			dc.SetLineWidth(z)
-			dc.Stroke()
 		}
 
-		return dc.Image(), nil
-	*/
+		dc.SetRGB(0, 0, 0)
+
+		z = 1.0
+		dc.SetLineWidth(z)
+		dc.Stroke()
+	}
+
+	return dc.Image(), nil
 }
 
 func Trace(ctx context.Context, input string, output string, opts *TraceOptions) (image.Image, error) {

@@ -6,9 +6,9 @@ import (
 	"image"
 	"image/png"
 	"io"
-	"os"
 	"log"
-	
+	"os"
+
 	"github.com/aaronland/go-image/resize"
 	"github.com/boombuler/barcode/qr"
 	"github.com/go-pdf/fpdf"
@@ -29,33 +29,34 @@ type AddSheetOptions struct {
 
 func AddSheet(ctx context.Context, pdf *fpdf.Fpdf, opts *AddSheetOptions) error {
 
+	letter_w := 8.5
+	letter_h := 11.0
+
 	dpi := 150.0
 
-	margin_x := 1.0
-	margin_y := 1.0
+	margin_x := 0.5
+	margin_y := 0.5
 
-	max_w := 11.0 - (margin_x * 2) // 8.25
-	max_h := 8.5 - (margin_y * 2)  // 6.375
+	max_w := letter_h - (margin_x * 2)
+	max_h := letter_w - (margin_y * 2.6)
+
+	footer_y := 8.5 - (margin_y * 2.5) // max_h + 0.1
 
 	log.Println("WUT", max_h)
-	
+
 	qr_w := 0.4
 	qr_h := 0.4
 	qr_margin := 0.5
 
-	footer_y := max_h + 0.1 // 7.5 // max_h - margin_y // 0.25 // 7.25 // derive from max_h + something
-	
 	line_h := 0.15
 
 	logo_w := 1.29
 	logo_h := 0.4
 
 	if Orientation(opts.Image) == "P" {
-
-		max_h = 10.25 - (margin_y * 2) // 8.25
-		max_w = 8.5 - (margin_x * 2)   // 6.375
-
-		footer_y = max_h + 0.9
+		max_h = letter_h - (margin_y * 2.6)
+		max_w = letter_w - (margin_x * 2)
+		footer_y = 11.0 - (margin_y * 2.5) // max_h + 0.9
 	}
 
 	dims := opts.Image.Bounds()
@@ -65,13 +66,32 @@ func AddSheet(ctx context.Context, pdf *fpdf.Fpdf, opts *AddSheetOptions) error 
 	im_x := margin_x
 	im_y := margin_y
 
-	log.Println("1 FFFFUUUUU", im_w, im_h)
-	
 	// Scale image if necessary
 
-	if im_h > max_h || im_w > max_w {
+	resize_image := false
+	max_dim := 0.0
 
-		max_dim := max(max_w, max_h)
+	// To do: Actually determine scale factor/size here...
+
+	if im_h > max_h && im_w > max_w {
+		resize_image = true
+		max_dim = min(max_w, max_h)
+
+		log.Println("RESIZE A", max_dim)
+	} else if im_h > max_h {
+		resize_image = true
+		max_dim = max_h
+
+		log.Println("RESIZE B", max_dim)
+	} else if im_w > max_w {
+		resize_image = true
+		max_dim = max_w
+
+		log.Println("RESIZE C", max_dim)
+	} else {
+	}
+
+	if resize_image {
 
 		new_im, err := resize.ResizeImage(ctx, opts.Image, int(max_dim*dpi))
 
@@ -119,16 +139,16 @@ func AddSheet(ctx context.Context, pdf *fpdf.Fpdf, opts *AddSheetOptions) error 
 		log.Println("FFFFUUUUU", im_w, im_h)
 	}
 
-	if im_h > im_w && im_w < max_w {
-		im_x = margin_x + ((max_w - im_w) / 2.0)
-		log.Printf("OMG %02f = %02f + ((%02f - %02f) / 2.0)\n", im_x, margin_x, max_w, im_w)
-	} else {
-		im_y = margin_y + ((max_h - im_h) / 4.0)
-		log.Printf("OMG %02f = %02f + ((%02f - %02f) / 2.0)\n", im_y, margin_y, max_h, im_h)		
-	}
+	// if im_h > im_w && im_w < max_w {
+	im_x = margin_x + ((max_w - im_w) / 2.0)
+	log.Printf("OMG %02f = %02f + ((%02f - %02f) / 2.0)\n", im_x, margin_x, max_w, im_w)
+	// } else {
+	im_y = margin_y + ((max_h - im_h) / 4.0)
+	log.Printf("OMG %02f = %02f + ((%02f - %02f) / 2.0)\n", im_y, margin_y, max_h, im_h)
+	// }
 
 	log.Printf("BBQ %02f, %02f @ %02f, %02f\n", im_x, im_y, im_w, im_h)
-	
+
 	pdf.SetFont("Helvetica", "", 8)
 
 	pdf.AddPage()

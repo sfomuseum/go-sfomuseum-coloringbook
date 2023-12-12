@@ -4,11 +4,13 @@ go 1.21.5
 
 require (
 	github.com/aaronland/go-image v1.2.2
-	github.com/aaronland/go-image-contour v1.0.2
 	github.com/aaronland/gocloud-blob v0.0.13
 	github.com/aaronland/gocloud-blob-s3 v0.2.4
 	github.com/aws/aws-lambda-go v1.42.0
 	github.com/boombuler/barcode v1.0.1
+	github.com/fogleman/colormap v0.0.0-20180829212827-f273ae61505a
+	github.com/fogleman/contourmap v0.0.0-20190814184649-9f61d36c4199
+	github.com/fogleman/gg v1.3.0
 	github.com/go-pdf/fpdf v0.9.0
 	github.com/jtacoma/uritemplates v1.0.0
 	github.com/sfomuseum/go-flags v0.10.0
@@ -60,9 +62,6 @@ require (
 	github.com/aws/smithy-go v1.17.0 // indirect
 	github.com/benbjohnson/clock v1.3.0 // indirect
 	github.com/cenkalti/backoff/v4 v4.2.1 // indirect
-	github.com/fogleman/colormap v0.0.0-20180829212827-f273ae61505a // indirect
-	github.com/fogleman/contourmap v0.0.0-20190814184649-9f61d36c4199 // indirect
-	github.com/fogleman/gg v1.3.0 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/g8rswimmer/error-chain v1.0.0 // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
