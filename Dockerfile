@@ -8,7 +8,6 @@ RUN mkdir /build
 COPY . /build/go-sfomuseum-colouringbook
 
 RUN apk update && apk upgrade \
-    #
     && cd /build/go-sfomuseum-colouringbook \
     && go build -mod vendor -ldflags="-s -w" -o /usr/local/bin/pdf cmd/pdf/main.go \
     && cd \

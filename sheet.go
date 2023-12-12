@@ -7,7 +7,8 @@ import (
 	"image/png"
 	"io"
 	"os"
-
+	"log"
+	
 	"github.com/aaronland/go-image/resize"
 	"github.com/boombuler/barcode/qr"
 	"github.com/go-pdf/fpdf"
@@ -30,17 +31,20 @@ func AddSheet(ctx context.Context, pdf *fpdf.Fpdf, opts *AddSheetOptions) error 
 
 	dpi := 150.0
 
-	margin_x := 1.375
-	margin_y := 0.75
+	margin_x := 1.0
+	margin_y := 1.0
 
 	max_w := 11.0 - (margin_x * 2) // 8.25
 	max_h := 8.5 - (margin_y * 2)  // 6.375
 
+	log.Println("WUT", max_h)
+	
 	qr_w := 0.4
 	qr_h := 0.4
 	qr_margin := 0.5
 
-	footer_y := max_h + 0.25 // 7.25 // derive from max_h + something
+	footer_y := max_h + 0.1 // 7.5 // max_h - margin_y // 0.25 // 7.25 // derive from max_h + something
+	
 	line_h := 0.15
 
 	logo_w := 1.29
@@ -59,8 +63,10 @@ func AddSheet(ctx context.Context, pdf *fpdf.Fpdf, opts *AddSheetOptions) error 
 	im_h := float64(dims.Max.Y) / dpi
 
 	im_x := margin_x
-	im_y := margin_y * 0.75
+	im_y := margin_y
 
+	log.Println("1 FFFFUUUUU", im_w, im_h)
+	
 	// Scale image if necessary
 
 	if im_h > max_h || im_w > max_w {
@@ -109,14 +115,20 @@ func AddSheet(ctx context.Context, pdf *fpdf.Fpdf, opts *AddSheetOptions) error 
 		new_dims := new_im.Bounds()
 		im_w = float64(new_dims.Max.X) / dpi
 		im_h = float64(new_dims.Max.Y) / dpi
+
+		log.Println("FFFFUUUUU", im_w, im_h)
 	}
 
-	if im_h > im_w {
+	if im_h > im_w && im_w < max_w {
 		im_x = margin_x + ((max_w - im_w) / 2.0)
+		log.Printf("OMG %02f = %02f + ((%02f - %02f) / 2.0)\n", im_x, margin_x, max_w, im_w)
 	} else {
 		im_y = margin_y + ((max_h - im_h) / 4.0)
+		log.Printf("OMG %02f = %02f + ((%02f - %02f) / 2.0)\n", im_y, margin_y, max_h, im_h)		
 	}
 
+	log.Printf("BBQ %02f, %02f @ %02f, %02f\n", im_x, im_y, im_w, im_h)
+	
 	pdf.SetFont("Helvetica", "", 8)
 
 	pdf.AddPage()

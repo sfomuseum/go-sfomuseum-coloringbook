@@ -6,7 +6,7 @@ require (
 	github.com/aaronland/go-image v1.2.2
 	github.com/aaronland/go-image-contour v1.0.2
 	github.com/aaronland/gocloud-blob v0.0.13
-	github.com/aaronland/gocloud-blob-s3 v0.2.3
+	github.com/aaronland/gocloud-blob-s3 v0.2.4
 	github.com/aws/aws-lambda-go v1.42.0
 	github.com/boombuler/barcode v1.0.1
 	github.com/go-pdf/fpdf v0.9.0
@@ -22,7 +22,7 @@ require (
 	github.com/whosonfirst/go-whosonfirst-uri v1.3.0
 	github.com/whosonfirst/go-writer-github/v3 v3.0.4
 	github.com/whosonfirst/go-writer/v3 v3.1.0
-	gocloud.dev v0.34.0
+	gocloud.dev v0.35.0
 )
 
 require (
@@ -37,33 +37,33 @@ require (
 	github.com/aaronland/go-uid-artisanal v0.0.4 // indirect
 	github.com/aaronland/go-uid-proxy v0.1.1 // indirect
 	github.com/aaronland/go-uid-whosonfirst v0.0.4 // indirect
-	github.com/aws/aws-sdk-go v1.44.324 // indirect
-	github.com/aws/aws-sdk-go-v2 v1.20.0 // indirect
-	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.4.11 // indirect
-	github.com/aws/aws-sdk-go-v2/config v1.18.32 // indirect
-	github.com/aws/aws-sdk-go-v2/credentials v1.13.31 // indirect
-	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.13.7 // indirect
-	github.com/aws/aws-sdk-go-v2/feature/s3/manager v1.11.76 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/configsources v1.1.37 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.4.31 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/ini v1.3.38 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/v4a v1.1.0 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.9.12 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/checksum v1.1.32 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.9.31 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.15.0 // indirect
-	github.com/aws/aws-sdk-go-v2/service/s3 v1.38.1 // indirect
-	github.com/aws/aws-sdk-go-v2/service/ssm v1.37.1 // indirect
-	github.com/aws/aws-sdk-go-v2/service/sso v1.13.1 // indirect
-	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.15.1 // indirect
-	github.com/aws/aws-sdk-go-v2/service/sts v1.21.1 // indirect
-	github.com/aws/smithy-go v1.14.0 // indirect
+	github.com/aws/aws-sdk-go v1.49.0 // indirect
+	github.com/aws/aws-sdk-go-v2 v1.23.1 // indirect
+	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.5.1 // indirect
+	github.com/aws/aws-sdk-go-v2/config v1.25.5 // indirect
+	github.com/aws/aws-sdk-go-v2/credentials v1.16.4 // indirect
+	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.14.5 // indirect
+	github.com/aws/aws-sdk-go-v2/feature/s3/manager v1.14.2 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/configsources v1.2.4 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.5.4 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/ini v1.7.1 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/v4a v1.2.4 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.10.1 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/checksum v1.2.4 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.10.4 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.16.4 // indirect
+	github.com/aws/aws-sdk-go-v2/service/s3 v1.44.0 // indirect
+	github.com/aws/aws-sdk-go-v2/service/ssm v1.43.1 // indirect
+	github.com/aws/aws-sdk-go-v2/service/sso v1.17.3 // indirect
+	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.20.1 // indirect
+	github.com/aws/aws-sdk-go-v2/service/sts v1.25.4 // indirect
+	github.com/aws/smithy-go v1.17.0 // indirect
 	github.com/benbjohnson/clock v1.3.0 // indirect
 	github.com/cenkalti/backoff/v4 v4.2.1 // indirect
 	github.com/fogleman/colormap v0.0.0-20180829212827-f273ae61505a // indirect
 	github.com/fogleman/contourmap v0.0.0-20190814184649-9f61d36c4199 // indirect
 	github.com/fogleman/gg v1.3.0 // indirect
-	github.com/fsnotify/fsnotify v1.6.0 // indirect
+	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/g8rswimmer/error-chain v1.0.0 // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
@@ -97,16 +97,16 @@ require (
 	go.mongodb.org/mongo-driver v1.11.4 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	go.uber.org/ratelimit v0.3.0 // indirect
-	golang.org/x/crypto v0.14.0 // indirect
+	golang.org/x/crypto v0.15.0 // indirect
 	golang.org/x/image v0.12.0 // indirect
-	golang.org/x/net v0.17.0 // indirect
-	golang.org/x/oauth2 v0.13.0 // indirect
-	golang.org/x/sys v0.13.0 // indirect
-	golang.org/x/text v0.13.0 // indirect
-	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
-	google.golang.org/api v0.134.0 // indirect
-	google.golang.org/appengine v1.6.7 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20230731193218-e0aa005b6bdf // indirect
-	google.golang.org/grpc v1.57.1 // indirect
+	golang.org/x/net v0.18.0 // indirect
+	golang.org/x/oauth2 v0.14.0 // indirect
+	golang.org/x/sys v0.14.0 // indirect
+	golang.org/x/text v0.14.0 // indirect
+	golang.org/x/xerrors v0.0.0-20231012003039-104605ab7028 // indirect
+	google.golang.org/api v0.151.0 // indirect
+	google.golang.org/appengine v1.6.8 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20231120223509-83a465c0220f // indirect
+	google.golang.org/grpc v1.59.0 // indirect
 	google.golang.org/protobuf v1.31.0 // indirect
 )

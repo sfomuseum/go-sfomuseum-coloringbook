@@ -105,6 +105,7 @@ func main() {
 		bucket_uri = fmt.Sprintf("file://%s", cwd)
 	}
 
+	log.Println("bucket", bucket_uri)
 	bucket, err := aa_bucket.OpenBucket(ctx, bucket_uri)
 
 	if err != nil {
@@ -257,6 +258,8 @@ func main() {
 
 		return nil
 	}
+
+	// Finally, run some code
 
 	switch mode {
 	case "cli":
