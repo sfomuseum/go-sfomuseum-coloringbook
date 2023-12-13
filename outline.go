@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"image"
 	"image/png"
-	"io"
 	"log"
 	"os"
 	"os/exec"
@@ -14,13 +13,13 @@ import (
 	"github.com/fogleman/colormap"
 	"github.com/fogleman/contourmap"
 	"github.com/fogleman/gg"
-	"github.com/sfomuseum/go-sfomuseum-colouringbook/static"
 	"github.com/sfomuseum/go-svg"
 )
 
 type OutlineOptions struct {
 	Contour *ContourOptions
 	Trace   *TraceOptions
+	Rasterize *RasterizeOptions
 }
 
 type ContourOptions struct {
@@ -32,6 +31,10 @@ type TraceOptions struct {
 	Speckle   int
 }
 
+type RasterizeOptions struct {
+	PathBatik string
+}
+	
 func GenerateOutline(ctx context.Context, im image.Image, opts *OutlineOptions) (image.Image, error) {
 
 	vtrace_infile, err := os.CreateTemp("", "vtrace.*.png")
@@ -157,8 +160,9 @@ func Trace(ctx context.Context, input string, output string, opts *TraceOptions)
 	return svg.Rasterize(ctx, r)
 }
 
-func Rasterize(ctx context.Context, input string) (image.Image, error) {
+func Rasterize(ctx context.Context, opts *RasterizeOptions, input string) (image.Image, error) {
 
+	/*
 	batik_r, err := static.FS.Open("jar/batik-rasterizer-1.17.jar")
 
 	if err != nil {
@@ -175,7 +179,7 @@ func Rasterize(ctx context.Context, input string) (image.Image, error) {
 
 	batik_path := batik_wr.Name()
 	defer os.Remove(batik_path)
-
+	
 	_, err = io.Copy(batik_wr, batik_wr)
 
 	if err != nil {
@@ -187,24 +191,25 @@ func Rasterize(ctx context.Context, input string) (image.Image, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Failed to close batik tmp file, %w", err)
 	}
-
+	*/
+	
 	cmd := "java"
 
 	args := []string{
 		"-jar",
-		batik_path,
+		opts.PathBatik,
 		input,
 	}
 
-	err = exec.CommandContext(ctx, cmd, args...).Run()
+	err := exec.CommandContext(ctx, cmd, args...).Run()
 
 	if err != nil {
 		return nil, fmt.Errorf("Failed to run batik, %w", err)
 	}
 
-	var output string // FIX ME
+	var output string	// FIX ME
 	defer os.Remove(output)
-
+	
 	r, err := os.Open(output)
 
 	if err != nil {

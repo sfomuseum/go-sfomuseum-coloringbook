@@ -15,8 +15,13 @@ RUN apk update && apk upgrade \
     
 FROM alpine
 
+RUN mkdir /usr/local/src
+
 RUN apk update && apk upgrade \
-    && apk add openjdk21-jre
+    && apk add openjdk21-jre \
+    && cd /usr/local/src \
+    && wget -O batik-bin-1.17.tar.gz 'https://www.apache.org/dyn/closer.cgi?filename=/xmlgraphics/batik/binaries/batik-bin-1.17.tar.gz&action=download' \
+    && tar -xvzf batik-bin-1.17.tar.gz
 
 COPY --from=rusttools /usr/local/cargo/bin/vtracer /usr/local/bin/vtracer
 COPY --from=gotools /usr/local/bin/pdf /usr/local/bin/pdf
