@@ -11,7 +11,9 @@ import (
 const GENERATE_COLOURING_BOOK_LAMBDA_URI string = "aws://GenerateColouringBook?region=us-west-2&credentials=session"
 
 type ColouringBookRequest struct {
-	ObjectId int64 `json:"object_id"`
+	ObjectId     int64 `json:"object_id"`
+	UpdateObject bool  `json:"update_object"`
+	// ContourIterations int `json:"contour_iterations"`
 }
 
 func GenerateColouringBookLambda(ctx context.Context, function_uri string, object_id int64) error {

@@ -17,9 +17,17 @@ import (
 )
 
 type OutlineOptions struct {
+	Contour *ContourOptions
+	Trace   *TraceOptions
+}
+
+type ContourOptions struct {
+	Iterations int
 }
 
 type TraceOptions struct {
+	Precision int
+	Speckle   int
 }
 
 func GenerateOutline(ctx context.Context, im image.Image, opts *OutlineOptions) (image.Image, error) {
@@ -60,11 +68,9 @@ func GenerateOutline(ctx context.Context, im image.Image, opts *OutlineOptions) 
 	outfile_uri := vtrace_outfile.Name()
 	defer os.Remove(outfile_uri)
 
-	trace_opts := &TraceOptions{}
-
 	log.Println("TRACE")
 
-	traced_im, err := Trace(ctx, infile_uri, outfile_uri, trace_opts)
+	traced_im, err := Trace(ctx, infile_uri, outfile_uri, opts.Trace)
 
 	if err != nil {
 		return nil, fmt.Errorf("Failed to trace image, %w", err)
@@ -72,10 +78,7 @@ func GenerateOutline(ctx context.Context, im image.Image, opts *OutlineOptions) 
 
 	log.Println("CONTOUR")
 
-	iterations := 5
-	scale := 1.0
-
-	contoured_im, err := Contour(ctx, traced_im, iterations, scale)
+	contoured_im, err := Contour(ctx, traced_im, opts.Contour)
 
 	if err != nil {
 		return nil, fmt.Errorf("Failed to contour image, %w", err)
@@ -84,7 +87,10 @@ func GenerateOutline(ctx context.Context, im image.Image, opts *OutlineOptions) 
 	return contoured_im, nil
 }
 
-func Contour(ctx context.Context, im image.Image, iterations int, scale float64) (image.Image, error) {
+func Contour(ctx context.Context, im image.Image, opts *ContourOptions) (image.Image, error) {
+
+	iterations := opts.Iterations
+	scale := 1.0
 
 	m := contourmap.FromImage(im).Closed()
 	z0 := m.Min
@@ -130,7 +136,7 @@ func Trace(ctx context.Context, input string, output string, opts *TraceOptions)
 
 	log.Println("VTRACER")
 
-	err := Vtrace(ctx, input, output)
+	err := Vtrace(ctx, input, output, opts)
 
 	if err != nil {
 		return nil, fmt.Errorf("Failed to run vtracer, %w", err)
@@ -149,10 +155,10 @@ func Trace(ctx context.Context, input string, output string, opts *TraceOptions)
 	return svg.Rasterize(ctx, r)
 }
 
-func Vtrace(ctx context.Context, input string, output string) error {
+func Vtrace(ctx context.Context, input string, output string, opts *TraceOptions) error {
 
-	precision := 6
-	speckle := 8
+	precision := opts.Precision
+	speckle := opts.Speckle
 
 	cmd := "vtracer"
 

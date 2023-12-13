@@ -9,11 +9,10 @@ import (
 	"log"
 	"os"
 
-	"github.com/nfnt/resize"
-	// "github.com/aaronland/go-image/resize"
 	"github.com/boombuler/barcode/qr"
 	"github.com/go-pdf/fpdf"
 	"github.com/go-pdf/fpdf/contrib/barcode"
+	"github.com/nfnt/resize"
 	"github.com/sfomuseum/go-sfomuseum-colouringbook/static"
 )
 
@@ -26,6 +25,7 @@ type AddSheetOptions struct {
 	CreditLine      string
 	AccessionNumber string
 	URL             string
+	Outline         *OutlineOptions
 }
 
 func AddSheet(ctx context.Context, pdf *fpdf.Fpdf, opts *AddSheetOptions) error {

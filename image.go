@@ -16,6 +16,11 @@ import (
 	wof_reader "github.com/whosonfirst/go-whosonfirst-reader"
 )
 
+type DeriveObjectImageOptions struct {
+	Reader  reader.Reader
+	Outline *OutlineOptions
+}
+
 func Orientation(im image.Image) string {
 
 	bounds := im.Bounds()
@@ -30,9 +35,9 @@ func Orientation(im image.Image) string {
 	return "L"
 }
 
-func DeriveObjectImage(ctx context.Context, r reader.Reader, image_id int64) (string, error) {
+func DeriveObjectImage(ctx context.Context, opts *DeriveObjectImageOptions, image_id int64) (string, error) {
 
-	im_body, err := wof_reader.LoadBytes(ctx, r, image_id)
+	im_body, err := wof_reader.LoadBytes(ctx, opts.Reader, image_id)
 
 	if err != nil {
 		return "", fmt.Errorf("Failed to load body for image %d, %v", image_id, err)
@@ -87,7 +92,7 @@ func DeriveObjectImage(ctx context.Context, r reader.Reader, image_id int64) (st
 
 	log.Println("Generate outline")
 
-	contoured_im, err := GenerateOutline(ctx, im, nil)
+	contoured_im, err := GenerateOutline(ctx, im, opts.Outline)
 
 	if err != nil {
 		return "", fmt.Errorf("Failed to generate outline for image %d, %w", image_id, err)

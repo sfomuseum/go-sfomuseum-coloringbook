@@ -40,6 +40,10 @@ func main() {
 	var append_tree bool
 	var access_token_uri string
 
+	var contour_iterations int
+	var vtracer_precision int
+	var vtracer_speckle int
+
 	var mode string
 
 	fs := flagset.NewFlagSet("colouringbook")
@@ -54,6 +58,10 @@ func main() {
 	fs.StringVar(&mode, "mode", "cli", "...")
 	fs.BoolVar(&append_tree, "append-tree", false, "...")
 	fs.StringVar(&access_token_uri, "access-token-uri", "", "...")
+
+	fs.IntVar(&contour_iterations, "contour-iteration", 6, "...")
+	fs.IntVar(&vtracer_precision, "vtracer-precision", 6, "...")
+	fs.IntVar(&vtracer_speckle, "vtracer-speckle", 8, "...")
 
 	flagset.Parse(fs)
 
@@ -142,7 +150,26 @@ func main() {
 
 		if object_image == "" {
 
-			derived_image, err := colouringbook.DeriveObjectImage(ctx, r, image_id)
+			contour_opts := &colouringbook.ContourOptions{
+				Iterations: contour_iterations,
+			}
+
+			trace_opts := &colouringbook.TraceOptions{
+				Precision: vtracer_precision,
+				Speckle:   vtracer_speckle,
+			}
+
+			outline_opts := &colouringbook.OutlineOptions{
+				Contour: contour_opts,
+				Trace:   trace_opts,
+			}
+
+			derive_opts := &colouringbook.DeriveObjectImageOptions{
+				Reader:  r,
+				Outline: outline_opts,
+			}
+
+			derived_image, err := colouringbook.DeriveObjectImage(ctx, derive_opts, image_id)
 
 			if err != nil {
 				return fmt.Errorf("Failed to derive object image, %v", err)
