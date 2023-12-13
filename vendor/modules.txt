@@ -10,10 +10,6 @@ github.com/aaronland/go-aws-session
 # github.com/aaronland/go-brooklynintegers-api v1.2.7
 ## explicit; go 1.18
 github.com/aaronland/go-brooklynintegers-api
-# github.com/aaronland/go-image v1.2.2
-## explicit; go 1.20
-github.com/aaronland/go-image/resize
-github.com/aaronland/go-image/transform
 # github.com/aaronland/go-json-query v0.1.4
 ## explicit; go 1.18
 github.com/aaronland/go-json-query
@@ -651,3 +647,5 @@ google.golang.org/protobuf/types/descriptorpb
 google.golang.org/protobuf/types/known/anypb
 google.golang.org/protobuf/types/known/durationpb
 google.golang.org/protobuf/types/known/timestamppb
+# gopkg.in/yaml.v2 v2.4.0
+## explicit; go 1.15

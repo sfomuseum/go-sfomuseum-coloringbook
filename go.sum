@@ -22,8 +22,6 @@ github.com/aaronland/go-aws-session v0.2.1 h1:sNCuxR1w2ng8fxHsl08AFcAWvZqmN4hmnB
 github.com/aaronland/go-aws-session v0.2.1/go.mod h1:M5imkutLPvwnI1Bb38minI3TCy1eSvwP6odMtCmBzqk=
 github.com/aaronland/go-brooklynintegers-api v1.2.7 h1:NpMlXLI9UU0l+IfA8Vy9EB3PCEedL1sEvSa2Ois3BSE=
 github.com/aaronland/go-brooklynintegers-api v1.2.7/go.mod h1:qH7vwhOM1OXFYsDZqy32R52rsPLU19CXjLZ5qjvuX5k=
-github.com/aaronland/go-image v1.2.2 h1:2Q5QlIuO0KzsT8MkO6d9VY13687GLF+TI83V5RtidWk=
-github.com/aaronland/go-image v1.2.2/go.mod h1:To/p3QVU6wjKmkDRlbML2TZwrRIGrvIkm9h+olNfA5A=
 github.com/aaronland/go-json-query v0.1.4 h1:iM5GkF0VDsOeVgp0/WrDaFUB64ubJvmm+TZ0H4OQxxM=
 github.com/aaronland/go-json-query v0.1.4/go.mod h1:S7V5eQko+XDPq+dfdSYub5mZI0VapVgUH2NLG0buZr4=
 github.com/aaronland/go-log/v2 v2.0.0 h1:lMoaVDHd4Etaz2+ibze3ReqvHHG68z2SpuxYXv12WlE=

@@ -105,7 +105,6 @@ func main() {
 		bucket_uri = fmt.Sprintf("file://%s", cwd)
 	}
 
-	log.Println("bucket", bucket_uri)
 	bucket, err := aa_bucket.OpenBucket(ctx, bucket_uri)
 
 	if err != nil {
@@ -263,7 +262,13 @@ func main() {
 
 	switch mode {
 	case "cli":
-		run(ctx, object_id)
+
+		err := run(ctx, object_id)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
 	case "lambda":
 
 		handler := func(ctx context.Context, req *colouringbook.ColouringBookRequest) error {

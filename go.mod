@@ -4,7 +4,6 @@ go 1.21.5
 
 require (
 	github.com/aaronland/go-aws-lambda v0.0.8
-	github.com/aaronland/go-image v1.2.2
 	github.com/aaronland/gocloud-blob v0.0.13
 	github.com/aaronland/gocloud-blob-s3 v0.2.4
 	github.com/aws/aws-lambda-go v1.42.0
@@ -14,6 +13,7 @@ require (
 	github.com/fogleman/gg v1.3.0
 	github.com/go-pdf/fpdf v0.9.0
 	github.com/jtacoma/uritemplates v1.0.0
+	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
 	github.com/sfomuseum/go-flags v0.10.0
 	github.com/sfomuseum/go-sfomuseum-writer/v3 v3.0.2
 	github.com/sfomuseum/go-svg v0.0.0-20231208192434-a3c9facf873c
@@ -78,7 +78,6 @@ require (
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/natefinch/atomic v1.0.1 // indirect
-	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 // indirect
 	github.com/paulmach/orb v0.10.0 // indirect
 	github.com/ruudk/golang-pdf417 v0.0.0-20201230142125-a7e3863a1245 // indirect
 	github.com/sfomuseum/go-edtf v1.1.1 // indirect
@@ -113,4 +112,5 @@ require (
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20231120223509-83a465c0220f // indirect
 	google.golang.org/grpc v1.59.0 // indirect
 	google.golang.org/protobuf v1.31.0 // indirect
+	gopkg.in/yaml.v2 v2.4.0 // indirect
 )

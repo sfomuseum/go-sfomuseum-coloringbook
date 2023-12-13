@@ -15,12 +15,12 @@ import (
 func main() {
 
 	var function_uri string
-	var object_id int64
 	var iterator_uri string
+	var debug bool
 
 	flag.StringVar(&function_uri, "function-uri", colouringbook.GENERATE_COLOURING_BOOK_LAMBDA_URI, "")
-	flag.Int64Var(&object_id, "object-id", 0, "")
 	flag.StringVar(&iterator_uri, "iterator-uri", "", "")
+	flag.BoolVar(&debug, "debug", false, "")
 
 	flag.Parse()
 
@@ -37,6 +37,11 @@ func main() {
 		}
 
 		if uri_args.IsAlternate {
+			return nil
+		}
+
+		if debug {
+			log.Printf("Invoke function for %d\n", object_id)
 			return nil
 		}
 

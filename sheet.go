@@ -9,7 +9,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/aaronland/go-image/resize"
+	"github.com/nfnt/resize"
+	// "github.com/aaronland/go-image/resize"
 	"github.com/boombuler/barcode/qr"
 	"github.com/go-pdf/fpdf"
 	"github.com/go-pdf/fpdf/contrib/barcode"
@@ -32,15 +33,18 @@ func AddSheet(ctx context.Context, pdf *fpdf.Fpdf, opts *AddSheetOptions) error 
 	letter_w := 8.5
 	letter_h := 11.0
 
+	logo_w := 1.0
+	logo_h := 0.3
+
 	dpi := 150.0
 
 	margin_x := 0.5
 	margin_y := 0.5
 
 	max_w := letter_h - (margin_x * 2)
-	max_h := letter_w - (margin_y * 2.25)
+	max_h := letter_w - (margin_y * 3.75)
 
-	footer_y := letter_w - (margin_y * 2.4) // max_h + 0.1
+	footer_y := margin_y + max_h + 0.15
 
 	qr_w := 0.4
 	qr_h := 0.4
@@ -48,15 +52,10 @@ func AddSheet(ctx context.Context, pdf *fpdf.Fpdf, opts *AddSheetOptions) error 
 
 	line_h := 0.15
 
-	logo_w := 1.29
-	logo_h := 0.4
-
 	if Orientation(opts.Image) == "P" {
-
 		max_h = letter_h - (margin_y * 3.75)
 		max_w = letter_w - (margin_x * 2)
-
-		footer_y = letter_h - (margin_y * 2.4)
+		footer_y = margin_y + max_h + 0.1
 	}
 
 	dims := opts.Image.Bounds()
@@ -66,74 +65,18 @@ func AddSheet(ctx context.Context, pdf *fpdf.Fpdf, opts *AddSheetOptions) error 
 	im_x := margin_x
 	im_y := margin_y
 
-	// log.Println("W", max_w, im_w)
-	// log.Println("H", max_h, im_h)
+	log.Printf("MAX w %02f h %02f\n", max_w, max_h)
+	log.Printf("IMAGE w %02f h %02f\n", im_w, im_h)
 
-	// Scale image if necessary
+	if im_h > max_h || im_w > max_w {
 
-	resize_image := false
-	max_dim := 0.0
+		new_w := uint(max_w * dpi)
+		new_h := uint(max_h * dpi)
 
-	if im_h > max_h && im_w > max_w {
+		new_im := resize.Thumbnail(new_w, new_h, opts.Image, resize.Lanczos3)
+		bounds := new_im.Bounds()
 
-		resize_image = true
-
-		if max_w > max_h {
-
-			ratio := max_w / im_w
-
-			if im_w > im_h {
-				max_dim = max_w
-
-				h := im_h * ratio
-
-				if h > max_h {
-					max_dim = max_h
-				}
-
-			} else {
-				max_dim = im_h * ratio
-			}
-
-		} else {
-
-			ratio := max_w / im_w
-
-			log.Println("HELLO", ratio)
-
-			if im_h > im_w {
-				max_dim = max_h
-
-				w := im_w * ratio
-
-				log.Println("WUT", w, max_w)
-
-				if w > max_w {
-					max_dim = max_w
-				}
-
-			} else {
-				max_dim = im_h * ratio
-			}
-
-		}
-
-	} else if im_h > max_h {
-		resize_image = true
-		max_dim = max_h
-	} else if im_w > max_w {
-		resize_image = true
-		max_dim = max_w
-	} else {
-	}
-
-	if resize_image {
-
-		new_im, err := resize.ResizeImage(ctx, opts.Image, int(max_dim*dpi))
-
-		if err != nil {
-			return fmt.Errorf("Failed to resize image, %w", err)
-		}
+		log.Printf("NEW DIMS w %d (%02f) %d (%02f)\n", bounds.Max.X, float64(bounds.Max.X)/dpi, bounds.Max.Y, float64(bounds.Max.Y)/dpi)
 
 		resized_fh, err := os.CreateTemp("", "*.png")
 
@@ -171,11 +114,8 @@ func AddSheet(ctx context.Context, pdf *fpdf.Fpdf, opts *AddSheetOptions) error 
 		new_dims := new_im.Bounds()
 		im_w = float64(new_dims.Max.X) / dpi
 		im_h = float64(new_dims.Max.Y) / dpi
-
-		// log.Println("FFFFUUUUU", im_w, im_h)
 	}
 
-	log.Printf("MAX w %02f h %02f\n", max_w, max_h)
 	log.Printf("IMAGE w %02f h %02f\n", im_w, im_h)
 
 	if im_w > max_w {
@@ -227,7 +167,7 @@ func AddSheet(ctx context.Context, pdf *fpdf.Fpdf, opts *AddSheetOptions) error 
 
 	// Add SFO Museum logo
 
-	logo_r, err := static.FS.Open("logo.png")
+	logo_r, err := static.FS.Open("logo-150.png")
 
 	if err != nil {
 		return fmt.Errorf("Failed to open SFOM logo, %w", err)
