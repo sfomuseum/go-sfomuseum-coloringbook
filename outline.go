@@ -157,7 +157,7 @@ func Trace(ctx context.Context, input string, output string, trace_opts *TraceOp
 		return RasterizeBatik(ctx, raster_opts, output)
 	}
 
-	// This is very (very) slow	
+	// This is very (very) slow
 	return RasterizeNative(ctx, raster_opts, output)
 }
 

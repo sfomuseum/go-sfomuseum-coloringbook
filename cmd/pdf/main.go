@@ -87,27 +87,6 @@ func main() {
 		log.Fatalf("Failed to create reader, %v", err)
 	}
 
-	var wr writer.Writer
-
-	if update_object {
-
-		if access_token_uri != "" {
-
-			writer_uri, err = gh_writer.EnsureGitHubAccessToken(ctx, writer_uri, access_token_uri)
-
-			if err != nil {
-				log.Fatalf("Failed to ensure access token, %v", err)
-			}
-
-		}
-
-		wr, err = writer.NewWriter(ctx, writer_uri)
-
-		if err != nil {
-			log.Fatalf("Failed to create new writer, %v", err)
-		}
-	}
-
 	// Set up bucket
 
 	if bucket_uri == "cwd://" {
@@ -294,6 +273,8 @@ func main() {
 
 		// Update object record
 
+		var new_body []byte
+
 		if update_object {
 
 			rsp := gjson.GetBytes(body, "properties.millsfield:has_coloring_book")
@@ -309,25 +290,47 @@ func main() {
 				"properties.millsfield:has_coloring_book": 1,
 			}
 
-			has_updates, new_body, err := export.AssignPropertiesIfChanged(ctx, body, updates)
+			has_updates, _body, err := export.AssignPropertiesIfChanged(ctx, body, updates)
 
 			if err != nil {
 				return fmt.Errorf("Failed to assign updates to object record, %v", err)
 			}
 
-			if has_updates {
+			if !has_updates {
+				update_object = false
+			}
 
-				_, err := sfom_writer.WriteBytes(ctx, wr, new_body)
+			new_body = _body
+		}
+
+		if update_object {
+
+			if access_token_uri != "" {
+
+				writer_uri, err = gh_writer.EnsureGitHubAccessToken(ctx, writer_uri, access_token_uri)
 
 				if err != nil {
-					return fmt.Errorf("Failed to update object record, %v", err)
+					log.Fatalf("Failed to ensure access token, %v", err)
 				}
 
-				err = wr.Close(ctx)
+			}
 
-				if err != nil {
-					return fmt.Errorf("Failed to close object update writer, %v", err)
-				}
+			wr, err := writer.NewWriter(ctx, writer_uri)
+
+			if err != nil {
+				log.Fatalf("Failed to create new writer, %v", err)
+			}
+
+			_, err = sfom_writer.WriteBytes(ctx, wr, new_body)
+
+			if err != nil {
+				return fmt.Errorf("Failed to update object record, %v", err)
+			}
+
+			err = wr.Close(ctx)
+
+			if err != nil {
+				return fmt.Errorf("Failed to close object update writer, %v", err)
 			}
 		}
 
