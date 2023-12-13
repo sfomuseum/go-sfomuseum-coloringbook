@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/exec"
 	"strconv"
+	"strings"
 
 	"github.com/fogleman/colormap"
 	"github.com/fogleman/contourmap"
@@ -17,8 +18,8 @@ import (
 )
 
 type OutlineOptions struct {
-	Contour *ContourOptions
-	Trace   *TraceOptions
+	Contour   *ContourOptions
+	Trace     *TraceOptions
 	Rasterize *RasterizeOptions
 }
 
@@ -32,9 +33,10 @@ type TraceOptions struct {
 }
 
 type RasterizeOptions struct {
+	UseBatik  bool
 	PathBatik string
 }
-	
+
 func GenerateOutline(ctx context.Context, im image.Image, opts *OutlineOptions) (image.Image, error) {
 
 	vtrace_infile, err := os.CreateTemp("", "vtrace.*.png")
@@ -75,7 +77,7 @@ func GenerateOutline(ctx context.Context, im image.Image, opts *OutlineOptions) 
 
 	log.Println("TRACE")
 
-	traced_im, err := Trace(ctx, infile_uri, outfile_uri, opts.Trace)
+	traced_im, err := Trace(ctx, infile_uri, outfile_uri, opts.Trace, opts.Rasterize)
 
 	if err != nil {
 		return nil, fmt.Errorf("Failed to trace image, %w", err)
@@ -129,7 +131,9 @@ func Contour(ctx context.Context, im image.Image, opts *ContourOptions) (image.I
 
 		dc.SetRGB(0, 0, 0)
 
-		z = 1.0
+		// z = 1.0
+		z = z * float64(i)
+
 		dc.SetLineWidth(z)
 		dc.Stroke()
 	}
@@ -137,62 +141,41 @@ func Contour(ctx context.Context, im image.Image, opts *ContourOptions) (image.I
 	return dc.Image(), nil
 }
 
-func Trace(ctx context.Context, input string, output string, opts *TraceOptions) (image.Image, error) {
+func Trace(ctx context.Context, input string, output string, trace_opts *TraceOptions, raster_opts *RasterizeOptions) (image.Image, error) {
 
 	log.Println("VTRACER")
 
-	err := Vtrace(ctx, input, output, opts)
+	err := Vtrace(ctx, input, output, trace_opts)
 
 	if err != nil {
 		return nil, fmt.Errorf("Failed to run vtracer, %w", err)
 	}
 
-	r, err := os.Open(output)
+	log.Println("RASTERIZE")
+
+	if raster_opts.UseBatik {
+		return RasterizeBatik(ctx, raster_opts, output)
+	}
+
+	// This is very (very) slow	
+	return RasterizeNative(ctx, raster_opts, output)
+}
+
+func RasterizeNative(ctx context.Context, opts *RasterizeOptions, input string) (image.Image, error) {
+
+	r, err := os.Open(input)
 
 	if err != nil {
-		return nil, fmt.Errorf("Failed to open %s for reading, %w", output, err)
+		return nil, fmt.Errorf("Failed to open %s for reading, %w", input, err)
 	}
 
 	defer r.Close()
 
-	log.Println("RASTERIZE")
-
 	return svg.Rasterize(ctx, r)
 }
 
-func Rasterize(ctx context.Context, opts *RasterizeOptions, input string) (image.Image, error) {
+func RasterizeBatik(ctx context.Context, opts *RasterizeOptions, input string) (image.Image, error) {
 
-	/*
-	batik_r, err := static.FS.Open("jar/batik-rasterizer-1.17.jar")
-
-	if err != nil {
-		return nil, fmt.Errorf("Failed to open batik file, %w", err)
-	}
-
-	defer batik_r.Close()
-
-	batik_wr, err := os.CreateTemp("", "*.jar")
-
-	if err != nil {
-		return nil, fmt.Errorf("Failed to batik temp file, %w", err)
-	}
-
-	batik_path := batik_wr.Name()
-	defer os.Remove(batik_path)
-	
-	_, err = io.Copy(batik_wr, batik_wr)
-
-	if err != nil {
-		return nil, fmt.Errorf("Failed to write batik tmp file, %w", err)
-	}
-
-	err = batik_wr.Close()
-
-	if err != nil {
-		return nil, fmt.Errorf("Failed to close batik tmp file, %w", err)
-	}
-	*/
-	
 	cmd := "java"
 
 	args := []string{
@@ -207,9 +190,11 @@ func Rasterize(ctx context.Context, opts *RasterizeOptions, input string) (image
 		return nil, fmt.Errorf("Failed to run batik, %w", err)
 	}
 
-	var output string	// FIX ME
+	// Why can't I specify the output filename in Batik?
+	output := strings.Replace(input, ".svg", ".png", 1)
+
 	defer os.Remove(output)
-	
+
 	r, err := os.Open(output)
 
 	if err != nil {

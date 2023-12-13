@@ -5,15 +5,17 @@ import (
 	"fmt"
 	"image"
 	_ "image/jpeg"
-	_ "image/png"
+	"image/png"
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/aaronland/gocloud-blob-s3"
 	aa_bucket "github.com/aaronland/gocloud-blob/bucket"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/go-pdf/fpdf"
+	"github.com/nfnt/resize"
 	"github.com/sfomuseum/go-flags/flagset"
 	"github.com/sfomuseum/go-sfomuseum-colouringbook"
 	sfom_writer "github.com/sfomuseum/go-sfomuseum-writer/v3"
@@ -44,6 +46,9 @@ func main() {
 	var vtracer_precision int
 	var vtracer_speckle int
 
+	var use_batik bool
+	var path_batik string
+
 	var mode string
 
 	fs := flagset.NewFlagSet("colouringbook")
@@ -59,9 +64,12 @@ func main() {
 	fs.BoolVar(&append_tree, "append-tree", false, "...")
 	fs.StringVar(&access_token_uri, "access-token-uri", "", "...")
 
-	fs.IntVar(&contour_iterations, "contour-iteration", 6, "...")
+	fs.IntVar(&contour_iterations, "contour-iteration", 8, "...")
 	fs.IntVar(&vtracer_precision, "vtracer-precision", 6, "...")
 	fs.IntVar(&vtracer_speckle, "vtracer-speckle", 8, "...")
+
+	fs.BoolVar(&use_batik, "use-batik", true, "...")
+	fs.StringVar(&path_batik, "path-batik", "/usr/local/src/batik-1.17/batik-rasterizer-1.17.jar", "...")
 
 	flagset.Parse(fs)
 
@@ -159,9 +167,15 @@ func main() {
 				Speckle:   vtracer_speckle,
 			}
 
+			raster_opts := &colouringbook.RasterizeOptions{
+				UseBatik:  use_batik,
+				PathBatik: path_batik,
+			}
+
 			outline_opts := &colouringbook.OutlineOptions{
-				Contour: contour_opts,
-				Trace:   trace_opts,
+				Contour:   contour_opts,
+				Trace:     trace_opts,
+				Rasterize: raster_opts,
 			}
 
 			derive_opts := &colouringbook.DeriveObjectImageOptions{
@@ -252,7 +266,42 @@ func main() {
 
 		log.Printf("Wrote %s\n", filename)
 
+		// Publish thumb
+
+		thumb_im := resize.Thumbnail(600, 600, im, resize.Lanczos3)
+
+		thumb_filename := strings.Replace(filename, ".pdf", ".png", 1)
+
+		thumb_wr, err := s3blob.NewWriterWithACL(ctx, bucket, thumb_filename, "public-read")
+
+		if err != nil {
+			return fmt.Errorf("Failed to create new writer for %s, %v", thumb_filename, err)
+		}
+
+		err = png.Encode(thumb_wr, thumb_im)
+
+		if err != nil {
+			return fmt.Errorf("Failed to encode %s, %w", thumb_filename, err)
+		}
+
+		err = thumb_wr.Close()
+
+		if err != nil {
+			return fmt.Errorf("Failed to close %s, %w", thumb_filename, err)
+		}
+
+		log.Printf("Wrote %s\n", thumb_filename)
+
 		// Update object record
+
+		if update_object {
+
+			rsp := gjson.GetBytes(body, "properties.millsfield:has_coloring_book")
+
+			if rsp.Exists() && rsp.String() == "1" {
+				update_object = false
+			}
+		}
 
 		if update_object {
 
