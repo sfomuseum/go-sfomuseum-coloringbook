@@ -15,7 +15,8 @@ RUN apk update && apk upgrade \
     
 FROM alpine
 
-RUN apk update && apk upgrade
+RUN apk update && apk upgrade \
+    && apk add openjdk21-jre
 
 COPY --from=rusttools /usr/local/cargo/bin/vtracer /usr/local/bin/vtracer
 COPY --from=gotools /usr/local/bin/pdf /usr/local/bin/pdf

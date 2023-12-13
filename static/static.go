@@ -4,5 +4,5 @@ import (
 	"embed"
 )
 
-//go:embed *.svg *.png
+//go:embed *.svg *.png jar/*.jar
 var FS embed.FS
