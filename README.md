@@ -10,3 +10,9 @@ This is SFO Museum specific code and is not designed to be a general purpose too
 
 Documentation is incomplete at this time.
 
+## See also
+
+* https://www.visioncortex.org/vtracer/
+* https://xmlgraphics.apache.org/batik/
+* https://github.com/fogleman/contourmap
+* https://github.com/go-pdf/fpdf

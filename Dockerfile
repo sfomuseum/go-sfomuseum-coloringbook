@@ -1,3 +1,7 @@
+# https://www.visioncortex.org/vtracer/
+# https://github.com/sfomuseum/go-sfomuseum-coloringbook
+# https://xmlgraphics.apache.org/batik/
+
 FROM rust:alpine AS rusttools
 
 RUN cargo install vtracer
