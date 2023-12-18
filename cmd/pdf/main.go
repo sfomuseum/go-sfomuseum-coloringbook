@@ -17,7 +17,7 @@ import (
 	"github.com/go-pdf/fpdf"
 	"github.com/nfnt/resize"
 	"github.com/sfomuseum/go-flags/flagset"
-	"github.com/sfomuseum/go-sfomuseum-colouringbook"
+	"github.com/sfomuseum/go-sfomuseum-coloringbook"
 	sfom_writer "github.com/sfomuseum/go-sfomuseum-writer/v3"
 	"github.com/tidwall/gjson"
 	"github.com/whosonfirst/go-reader"
@@ -51,7 +51,7 @@ func main() {
 
 	var mode string
 
-	fs := flagset.NewFlagSet("colouringbook")
+	fs := flagset.NewFlagSet("coloringbook")
 
 	fs.StringVar(&object_image, "object-image", "", "...")
 	fs.Int64Var(&object_id, "object-id", 0, "...")
@@ -137,32 +137,32 @@ func main() {
 
 		if object_image == "" {
 
-			contour_opts := &colouringbook.ContourOptions{
+			contour_opts := &coloringbook.ContourOptions{
 				Iterations: contour_iterations,
 			}
 
-			trace_opts := &colouringbook.TraceOptions{
+			trace_opts := &coloringbook.TraceOptions{
 				Precision: vtracer_precision,
 				Speckle:   vtracer_speckle,
 			}
 
-			raster_opts := &colouringbook.RasterizeOptions{
+			raster_opts := &coloringbook.RasterizeOptions{
 				UseBatik:  use_batik,
 				PathBatik: path_batik,
 			}
 
-			outline_opts := &colouringbook.OutlineOptions{
+			outline_opts := &coloringbook.OutlineOptions{
 				Contour:   contour_opts,
 				Trace:     trace_opts,
 				Rasterize: raster_opts,
 			}
 
-			derive_opts := &colouringbook.DeriveObjectImageOptions{
+			derive_opts := &coloringbook.DeriveObjectImageOptions{
 				Reader:  r,
 				Outline: outline_opts,
 			}
 
-			derived_image, err := colouringbook.DeriveObjectImage(ctx, derive_opts, image_id)
+			derived_image, err := coloringbook.DeriveObjectImage(ctx, derive_opts, image_id)
 
 			if err != nil {
 				return fmt.Errorf("Failed to derive object image, %v", err)
@@ -187,7 +187,7 @@ func main() {
 			return fmt.Errorf("Failed to decode image %s, %w", object_image, err)
 		}
 
-		orientation := colouringbook.Orientation(im)
+		orientation := coloringbook.Orientation(im)
 
 		im_r.Seek(0, 0)
 
@@ -197,7 +197,7 @@ func main() {
 
 		// Add sheet to colouring book
 
-		sheet_opts := &colouringbook.AddSheetOptions{
+		sheet_opts := &coloringbook.AddSheetOptions{
 			Image:           im,
 			ImagePath:       object_image,
 			ImageReader:     im_r,
@@ -208,7 +208,7 @@ func main() {
 			AccessionNumber: accession_number_rsp.String(),
 		}
 
-		err = colouringbook.AddSheet(ctx, pdf, sheet_opts)
+		err = coloringbook.AddSheet(ctx, pdf, sheet_opts)
 
 		if err != nil {
 			return fmt.Errorf("Failed to add sheet, %v", err)
@@ -350,7 +350,7 @@ func main() {
 
 	case "lambda":
 
-		handler := func(ctx context.Context, req *colouringbook.ColouringBookRequest) error {
+		handler := func(ctx context.Context, req *coloringbook.ColoringBookRequest) error {
 			return run(ctx, req.ObjectId)
 		}
 

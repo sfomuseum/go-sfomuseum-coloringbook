@@ -1,4 +1,4 @@
-package colouringbook
+package coloringbook
 
 import (
 	"context"

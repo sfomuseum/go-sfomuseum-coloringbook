@@ -7,7 +7,7 @@ import (
 	"io"
 	"log"
 
-	"github.com/sfomuseum/go-sfomuseum-colouringbook"
+	"github.com/sfomuseum/go-sfomuseum-coloringbook"
 	"github.com/whosonfirst/go-whosonfirst-iterate/v2/iterator"
 	"github.com/whosonfirst/go-whosonfirst-uri"
 )
@@ -18,7 +18,7 @@ func main() {
 	var iterator_uri string
 	var debug bool
 
-	flag.StringVar(&function_uri, "function-uri", colouringbook.GENERATE_COLOURING_BOOK_LAMBDA_URI, "")
+	flag.StringVar(&function_uri, "function-uri", coloringbook.GENERATE_COLORING_BOOK_LAMBDA_URI, "")
 	flag.StringVar(&iterator_uri, "iterator-uri", "", "")
 	flag.BoolVar(&debug, "debug", false, "")
 
@@ -45,7 +45,7 @@ func main() {
 			return nil
 		}
 
-		err = colouringbook.GenerateColouringBookLambda(ctx, function_uri, object_id)
+		err = coloringbook.GenerateColoringBookLambda(ctx, function_uri, object_id)
 
 		if err != nil {
 			return fmt.Errorf("Failed to invoke Lambda function for %s, %w", path, err)

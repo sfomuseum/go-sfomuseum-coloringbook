@@ -1,4 +1,4 @@
-package colouringbook
+package coloringbook
 
 import (
 	"context"
@@ -13,7 +13,7 @@ import (
 	"github.com/go-pdf/fpdf"
 	"github.com/go-pdf/fpdf/contrib/barcode"
 	"github.com/nfnt/resize"
-	"github.com/sfomuseum/go-sfomuseum-colouringbook/static"
+	"github.com/sfomuseum/go-sfomuseum-coloringbook/static"
 )
 
 type AddSheetOptions struct {

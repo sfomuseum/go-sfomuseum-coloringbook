@@ -1,4 +1,4 @@
-module github.com/sfomuseum/go-sfomuseum-colouringbook
+module github.com/sfomuseum/go-sfomuseum-coloringbook
 
 go 1.21.5
 

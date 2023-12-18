@@ -5,10 +5,10 @@ RUN cargo install vtracer
 FROM golang:1.21-alpine as gotools
 
 RUN mkdir /build
-COPY . /build/go-sfomuseum-colouringbook
+COPY . /build/go-sfomuseum-coloringbook
 
 RUN apk update && apk upgrade \
-    && cd /build/go-sfomuseum-colouringbook \
+    && cd /build/go-sfomuseum-coloringbook \
     && go build -mod vendor -ldflags="-s -w" -o /usr/local/bin/pdf cmd/pdf/main.go \
     && cd \
     && rm -rf build

@@ -1,4 +1,4 @@
-package colouringbook
+package coloringbook
 
 import (
 	"context"
@@ -8,15 +8,15 @@ import (
 	"github.com/aaronland/go-aws-lambda"
 )
 
-const GENERATE_COLOURING_BOOK_LAMBDA_URI string = "aws://GenerateColouringBook?region=us-west-2&credentials=session"
+const GENERATE_COLORING_BOOK_LAMBDA_URI string = "aws://GenerateColouringBook?region=us-west-2&credentials=session"
 
-type ColouringBookRequest struct {
+type ColoringBookRequest struct {
 	ObjectId     int64 `json:"object_id"`
 	UpdateObject bool  `json:"update_object"`
 	// ContourIterations int `json:"contour_iterations"`
 }
 
-func GenerateColouringBookLambda(ctx context.Context, function_uri string, object_id int64) error {
+func GenerateColoringBookLambda(ctx context.Context, function_uri string, object_id int64) error {
 
 	f, err := lambda.NewLambdaFunction(ctx, function_uri)
 
@@ -24,7 +24,7 @@ func GenerateColouringBookLambda(ctx context.Context, function_uri string, objec
 		return fmt.Errorf("Failed to create new Lambda function, %v", err)
 	}
 
-	req := ColouringBookRequest{
+	req := ColoringBookRequest{
 		ObjectId: object_id,
 	}
 
