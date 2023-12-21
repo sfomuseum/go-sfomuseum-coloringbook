@@ -9,7 +9,7 @@ import (
 	"os"
 
 	"github.com/sfomuseum/go-flags/flagset"
-	"github.com/sfomuseum/go-sfomuseum-coloringbook"
+	"github.com/sfomuseum/go-sfomuseum-coloringbook/outline"
 )
 
 func main() {
@@ -46,23 +46,23 @@ func main() {
 
 	ctx := context.Background()
 
-	contour_opts := &coloringbook.ContourOptions{
+	contour_opts := &outline.ContourOptions{
 		Iterations: contour_iterations,
 		Scale:      contour_scale,
 		Format:     contour_format,
 	}
 
-	trace_opts := &coloringbook.TraceOptions{
+	trace_opts := &outline.TraceOptions{
 		Precision: vtracer_precision,
 		Speckle:   vtracer_speckle,
 	}
 
-	raster_opts := &coloringbook.RasterizeOptions{
+	raster_opts := &outline.RasterizeOptions{
 		UseBatik:  use_batik,
 		PathBatik: path_batik,
 	}
 
-	outline_opts := &coloringbook.OutlineOptions{
+	outline_opts := &outline.OutlineOptions{
 		Contour:   contour_opts,
 		Trace:     trace_opts,
 		Rasterize: raster_opts,
@@ -82,7 +82,7 @@ func main() {
 		log.Fatalf("Failed to decode %s, %v", infile, err)
 	}
 
-	outline, err := coloringbook.GenerateOutline(ctx, im, outline_opts)
+	outline, err := outline.GenerateOutline(ctx, im, outline_opts)
 
 	if err != nil {
 		log.Fatalf("Failed to generate outline, %v", err)

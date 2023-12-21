@@ -11,6 +11,7 @@ import (
 	"os"
 
 	"github.com/jtacoma/uritemplates"
+	"github.com/sfomuseum/go-sfomuseum-coloringbook/outline"
 	"github.com/tidwall/gjson"
 	"github.com/whosonfirst/go-reader"
 	wof_reader "github.com/whosonfirst/go-whosonfirst-reader"
@@ -18,7 +19,7 @@ import (
 
 type DeriveObjectImageOptions struct {
 	Reader  reader.Reader
-	Outline *OutlineOptions
+	Outline *outline.OutlineOptions
 }
 
 func Orientation(im image.Image) string {
@@ -92,7 +93,7 @@ func DeriveObjectImage(ctx context.Context, opts *DeriveObjectImageOptions, imag
 
 	log.Println("Generate outline")
 
-	contoured_im, err := GenerateOutline(ctx, im, opts.Outline)
+	contoured_im, err := outline.GenerateOutline(ctx, im, opts.Outline)
 
 	if err != nil {
 		return "", fmt.Errorf("Failed to generate outline for image %d, %w", image_id, err)

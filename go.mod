@@ -6,7 +6,7 @@ require (
 	github.com/aaronland/go-aws-lambda v0.0.8
 	github.com/aaronland/gocloud-blob v0.0.13
 	github.com/aaronland/gocloud-blob-s3 v0.2.4
-	github.com/aws/aws-lambda-go v1.42.0
+	github.com/aws/aws-lambda-go v1.43.0
 	github.com/boombuler/barcode v1.0.1
 	github.com/fogleman/colormap v0.0.0-20180829212827-f273ae61505a
 	github.com/fogleman/contourmap v0.0.0-20190814184649-9f61d36c4199
@@ -17,7 +17,7 @@ require (
 	github.com/sfomuseum/go-flags v0.10.0
 	github.com/sfomuseum/go-sfomuseum-writer/v3 v3.0.2
 	github.com/sfomuseum/go-svg v0.0.0-20231208192434-a3c9facf873c
-	github.com/tidwall/gjson v1.16.0
+	github.com/tidwall/gjson v1.17.0
 	github.com/whosonfirst/go-reader v1.0.2
 	github.com/whosonfirst/go-reader-http v0.3.1
 	github.com/whosonfirst/go-whosonfirst-export/v2 v2.7.1
@@ -112,5 +112,4 @@ require (
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20231120223509-83a465c0220f // indirect
 	google.golang.org/grpc v1.59.0 // indirect
 	google.golang.org/protobuf v1.31.0 // indirect
-	gopkg.in/yaml.v2 v2.4.0 // indirect
 )

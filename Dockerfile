@@ -14,6 +14,7 @@ COPY . /build/go-sfomuseum-coloringbook
 RUN apk update && apk upgrade \
     && cd /build/go-sfomuseum-coloringbook \
     && go build -mod vendor -ldflags="-s -w" -o /usr/local/bin/pdf cmd/pdf/main.go \
+    && go build -mod vendor -ldflags="-s -w" -o /usr/local/bin/outline cmd/outline/main.go \    
     && cd \
     && rm -rf build
     
@@ -29,3 +30,4 @@ RUN apk update && apk upgrade \
 
 COPY --from=rusttools /usr/local/cargo/bin/vtracer /usr/local/bin/vtracer
 COPY --from=gotools /usr/local/bin/pdf /usr/local/bin/pdf
+COPY --from=gotools /usr/local/bin/outline /usr/local/bin/outline
