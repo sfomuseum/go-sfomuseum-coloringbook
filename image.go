@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"image"
 	_ "image/jpeg"
-	"image/png"
+	_ "image/png"
 	"log"
 	"net/http"
 	"os"
@@ -106,7 +106,7 @@ func DeriveObjectImage(ctx context.Context, opts *DeriveObjectImageOptions, imag
 
 	object_image := im_tmpfile.Name()
 
-	err = png.Encode(im_tmpfile, contoured_im)
+	err = contoured_im.Write(ctx, im_tmpfile)
 
 	if err != nil {
 		os.Remove(object_image)

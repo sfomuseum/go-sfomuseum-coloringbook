@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"image"
 	"image/png"
+	"io"
 	"log"
 	"os"
 	"os/exec"
@@ -16,6 +17,27 @@ import (
 	"github.com/fogleman/gg"
 	"github.com/sfomuseum/go-svg"
 )
+
+type Outline interface {
+	Write(context.Context, io.Writer) error
+}
+
+type PNGOutline struct {
+	Outline
+	image image.Image
+}
+
+func (o *PNGOutline) Write(ctx context.Context, wr io.Writer) error {
+	return png.Encode(wr, o.image)
+}
+
+type SVGOutline struct {
+	Outline
+}
+
+func (o *SVGOutline) Write(ctx context.Context, wr io.Writer) error {
+	return fmt.Errorf("Not implemented")
+}
 
 type OutlineOptions struct {
 	Contour   *ContourOptions
@@ -37,7 +59,7 @@ type RasterizeOptions struct {
 	PathBatik string
 }
 
-func GenerateOutline(ctx context.Context, im image.Image, opts *OutlineOptions) (image.Image, error) {
+func GenerateOutline(ctx context.Context, im image.Image, opts *OutlineOptions) (Outline, error) {
 
 	vtrace_infile, err := os.CreateTemp("", "vtrace.*.png")
 
@@ -85,16 +107,20 @@ func GenerateOutline(ctx context.Context, im image.Image, opts *OutlineOptions) 
 
 	log.Println("CONTOUR")
 
-	contoured_im, err := Contour(ctx, traced_im, opts.Contour)
+	o, err := ContourRaster(ctx, traced_im, opts.Contour)
 
 	if err != nil {
 		return nil, fmt.Errorf("Failed to contour image, %w", err)
 	}
 
-	return contoured_im, nil
+	return o, nil
 }
 
-func Contour(ctx context.Context, im image.Image, opts *ContourOptions) (image.Image, error) {
+func ContourVector(ctx context.Context, im image.Image, opts *ContourOptions) (Outline, error) {
+	return nil, fmt.Errorf("Not implemented")
+}
+
+func ContourRaster(ctx context.Context, im image.Image, opts *ContourOptions) (Outline, error) {
 
 	iterations := opts.Iterations
 	scale := 1.0
@@ -138,7 +164,11 @@ func Contour(ctx context.Context, im image.Image, opts *ContourOptions) (image.I
 		dc.Stroke()
 	}
 
-	return dc.Image(), nil
+	o := &PNGOutline{
+		image: dc.Image(),
+	}
+	
+	return o, nil
 }
 
 func Trace(ctx context.Context, input string, output string, trace_opts *TraceOptions, raster_opts *RasterizeOptions) (image.Image, error) {
