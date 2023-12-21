@@ -13,7 +13,7 @@ import (
 	"github.com/go-pdf/fpdf"
 	"github.com/go-pdf/fpdf/contrib/barcode"
 	"github.com/nfnt/resize"
-	"github.com/sfomuseum/go-sfomuseum-coloringbook/outline"
+	"github.com/sfomuseum/go-coloringbook/outline"
 	"github.com/sfomuseum/go-sfomuseum-coloringbook/static"
 )
 

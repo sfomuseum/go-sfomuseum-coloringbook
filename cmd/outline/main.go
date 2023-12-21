@@ -9,7 +9,7 @@ import (
 	"os"
 
 	"github.com/sfomuseum/go-flags/flagset"
-	"github.com/sfomuseum/go-sfomuseum-coloringbook/outline"
+	"github.com/sfomuseum/go-coloringbook/outline"
 )
 
 func main() {

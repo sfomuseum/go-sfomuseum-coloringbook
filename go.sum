@@ -213,6 +213,8 @@ github.com/ruudk/golang-pdf417 v0.0.0-20181029194003-1af4ab5afa58/go.mod h1:6lfF
 github.com/ruudk/golang-pdf417 v0.0.0-20201230142125-a7e3863a1245 h1:K1Xf3bKttbF+koVGaX5xngRIZ5bVjbmPnaxE/dR08uY=
 github.com/ruudk/golang-pdf417 v0.0.0-20201230142125-a7e3863a1245/go.mod h1:pQAZKsJ8yyVxGRWYNEm9oFB8ieLgKFnamEyDmSA0BRk=
 github.com/sergi/go-diff v1.2.0/go.mod h1:STckp+ISIX8hZLjrqAeVduY0gWCT9IjLuqbuNXdaHfM=
+github.com/sfomuseum/go-coloringbook v0.0.1 h1:jbcCvK2UMgFWdPXXUYgKEpw97lJCtztkyvceTIRTT88=
+github.com/sfomuseum/go-coloringbook v0.0.1/go.mod h1:HFxX+kxa97peuGKaJ5Vi67W7t49M4cZnBg+TFFkM1ng=
 github.com/sfomuseum/go-edtf v0.2.3/go.mod h1:1rP0EJZ/84j3HO80vGcnG2T9MFBDAFyTNtjrr8cv3T4=
 github.com/sfomuseum/go-edtf v0.3.1/go.mod h1:1rP0EJZ/84j3HO80vGcnG2T9MFBDAFyTNtjrr8cv3T4=
 github.com/sfomuseum/go-edtf v1.1.1 h1:R5gElndHGDaK/rGSh2X+ulaLtlcHCdQA1cTzB8e9wv8=

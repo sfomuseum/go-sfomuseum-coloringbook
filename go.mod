@@ -8,15 +8,12 @@ require (
 	github.com/aaronland/gocloud-blob-s3 v0.2.4
 	github.com/aws/aws-lambda-go v1.43.0
 	github.com/boombuler/barcode v1.0.1
-	github.com/fogleman/colormap v0.0.0-20180829212827-f273ae61505a
-	github.com/fogleman/contourmap v0.0.0-20190814184649-9f61d36c4199
-	github.com/fogleman/gg v1.3.0
 	github.com/go-pdf/fpdf v0.9.0
 	github.com/jtacoma/uritemplates v1.0.0
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
+	github.com/sfomuseum/go-coloringbook v0.0.1
 	github.com/sfomuseum/go-flags v0.10.0
 	github.com/sfomuseum/go-sfomuseum-writer/v3 v3.0.2
-	github.com/sfomuseum/go-svg v0.0.0-20231208192434-a3c9facf873c
 	github.com/tidwall/gjson v1.17.0
 	github.com/whosonfirst/go-reader v1.0.2
 	github.com/whosonfirst/go-reader-http v0.3.1
@@ -65,6 +62,9 @@ require (
 	github.com/aws/smithy-go v1.17.0 // indirect
 	github.com/benbjohnson/clock v1.3.0 // indirect
 	github.com/cenkalti/backoff/v4 v4.2.1 // indirect
+	github.com/fogleman/colormap v0.0.0-20180829212827-f273ae61505a // indirect
+	github.com/fogleman/contourmap v0.0.0-20190814184649-9f61d36c4199 // indirect
+	github.com/fogleman/gg v1.3.0 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/g8rswimmer/error-chain v1.0.0 // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
@@ -82,6 +82,7 @@ require (
 	github.com/ruudk/golang-pdf417 v0.0.0-20201230142125-a7e3863a1245 // indirect
 	github.com/sfomuseum/go-edtf v1.1.1 // indirect
 	github.com/sfomuseum/go-sfomuseum-export/v2 v2.3.8 // indirect
+	github.com/sfomuseum/go-svg v0.0.0-20231208192434-a3c9facf873c // indirect
 	github.com/sfomuseum/runtimevar v1.1.2 // indirect
 	github.com/srwiley/oksvg v0.0.0-20221011165216-be6e8873101c // indirect
 	github.com/srwiley/rasterx v0.0.0-20220730225603-2ab79fcdd4ef // indirect

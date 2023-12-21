@@ -18,7 +18,7 @@ import (
 	"github.com/nfnt/resize"
 	"github.com/sfomuseum/go-flags/flagset"
 	"github.com/sfomuseum/go-sfomuseum-coloringbook"
-	"github.com/sfomuseum/go-sfomuseum-coloringbook/outline"
+	"github.com/sfomuseum/go-coloringbook/outline"
 	sfom_writer "github.com/sfomuseum/go-sfomuseum-writer/v3"
 	"github.com/tidwall/gjson"
 	"github.com/whosonfirst/go-reader"

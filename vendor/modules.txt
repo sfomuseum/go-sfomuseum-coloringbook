@@ -330,6 +330,9 @@ github.com/paulmach/orb/planar
 # github.com/ruudk/golang-pdf417 v0.0.0-20201230142125-a7e3863a1245
 ## explicit; go 1.15
 github.com/ruudk/golang-pdf417
+# github.com/sfomuseum/go-coloringbook v0.0.1
+## explicit; go 1.21.5
+github.com/sfomuseum/go-coloringbook/outline
 # github.com/sfomuseum/go-edtf v1.1.1
 ## explicit; go 1.12
 github.com/sfomuseum/go-edtf

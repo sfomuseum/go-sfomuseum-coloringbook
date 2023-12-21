@@ -11,7 +11,7 @@ import (
 	"os"
 
 	"github.com/jtacoma/uritemplates"
-	"github.com/sfomuseum/go-sfomuseum-coloringbook/outline"
+	"github.com/sfomuseum/go-coloringbook/outline"
 	"github.com/tidwall/gjson"
 	"github.com/whosonfirst/go-reader"
 	wof_reader "github.com/whosonfirst/go-whosonfirst-reader"
