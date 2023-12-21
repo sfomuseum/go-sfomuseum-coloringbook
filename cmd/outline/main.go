@@ -2,14 +2,14 @@ package main
 
 import (
 	"context"
-	"log"
 	"image"
 	_ "image/jpeg"
 	_ "image/png"
+	"log"
 	"os"
-	
-	"github.com/sfomuseum/go-sfomuseum-coloringbook"	
+
 	"github.com/sfomuseum/go-flags/flagset"
+	"github.com/sfomuseum/go-sfomuseum-coloringbook"
 )
 
 func main() {
@@ -23,7 +23,7 @@ func main() {
 
 	var infile string
 	var outfile string
-	
+
 	fs := flagset.NewFlagSet("coloringbook")
 
 	fs.IntVar(&contour_iterations, "contour-iteration", 8, "...")
@@ -34,26 +34,26 @@ func main() {
 	fs.StringVar(&path_batik, "path-batik", "/usr/local/src/batik-1.17/batik-rasterizer-1.17.jar", "...")
 
 	fs.StringVar(&infile, "infile", "", "...")
-	fs.StringVar(&outfile, "outfile", "", "...")	
-	
+	fs.StringVar(&outfile, "outfile", "", "...")
+
 	flagset.Parse(fs)
-	
+
 	ctx := context.Background()
 
 	contour_opts := &coloringbook.ContourOptions{
 		Iterations: contour_iterations,
 	}
-	
+
 	trace_opts := &coloringbook.TraceOptions{
 		Precision: vtracer_precision,
 		Speckle:   vtracer_speckle,
 	}
-	
+
 	raster_opts := &coloringbook.RasterizeOptions{
 		UseBatik:  use_batik,
 		PathBatik: path_batik,
 	}
-	
+
 	outline_opts := &coloringbook.OutlineOptions{
 		Contour:   contour_opts,
 		Trace:     trace_opts,
