@@ -15,6 +15,9 @@ import (
 func main() {
 
 	var contour_iterations int
+	var contour_scale float64
+	var contour_format string
+
 	var vtracer_precision int
 	var vtracer_speckle int
 
@@ -27,6 +30,9 @@ func main() {
 	fs := flagset.NewFlagSet("coloringbook")
 
 	fs.IntVar(&contour_iterations, "contour-iteration", 8, "...")
+	fs.Float64Var(&contour_scale, "contour-scale", 1.0, "...")
+	fs.StringVar(&contour_format, "contour-format", "png", "...")
+
 	fs.IntVar(&vtracer_precision, "vtracer-precision", 6, "...")
 	fs.IntVar(&vtracer_speckle, "vtracer-speckle", 8, "...")
 
@@ -42,6 +48,8 @@ func main() {
 
 	contour_opts := &coloringbook.ContourOptions{
 		Iterations: contour_iterations,
+		Scale:      contour_scale,
+		Format:     contour_format,
 	}
 
 	trace_opts := &coloringbook.TraceOptions{

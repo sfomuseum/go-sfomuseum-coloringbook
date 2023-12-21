@@ -49,8 +49,17 @@ type OutlineOptions struct {
 	Rasterize *RasterizeOptions
 }
 
+type ContourFormat uint8
+
+const (
+	PNG ContourFormat = iota
+	SVG
+)
+
 type ContourOptions struct {
 	Iterations int
+	Scale      float64
+	Format     string
 }
 
 type TraceOptions struct {
@@ -111,7 +120,7 @@ func GenerateOutline(ctx context.Context, im image.Image, opts *OutlineOptions) 
 
 	log.Println("CONTOUR")
 
-	o, err := ContourRaster(ctx, traced_im, opts.Contour)
+	o, err := Contour(ctx, traced_im, opts.Contour)
 
 	if err != nil {
 		return nil, fmt.Errorf("Failed to contour image, %w", err)
@@ -120,7 +129,19 @@ func GenerateOutline(ctx context.Context, im image.Image, opts *OutlineOptions) 
 	return o, nil
 }
 
-func ContourVector(ctx context.Context, im image.Image, opts *ContourOptions) (Outline, error) {
+func Contour(ctx context.Context, im image.Image, opts *ContourOptions) (Outline, error) {
+
+	switch strings.ToUpper(opts.Format) {
+	case "PNG":
+		return ContourPNG(ctx, im, opts)
+	case "SVG":
+		return ContourSVG(ctx, im, opts)
+	default:
+		return nil, fmt.Errorf("Invalid contour format")
+	}
+}
+
+func ContourSVG(ctx context.Context, im image.Image, opts *ContourOptions) (Outline, error) {
 
 	iterations := opts.Iterations
 	scale := 1.0
@@ -171,7 +192,7 @@ func ContourVector(ctx context.Context, im image.Image, opts *ContourOptions) (O
 	return o, nil
 }
 
-func ContourRaster(ctx context.Context, im image.Image, opts *ContourOptions) (Outline, error) {
+func ContourRaster(ctx context.Context, im image.Image, opts *ContourOptions) (image.Image, error) {
 
 	iterations := opts.Iterations
 	scale := 1.0
@@ -215,8 +236,19 @@ func ContourRaster(ctx context.Context, im image.Image, opts *ContourOptions) (O
 		dc.Stroke()
 	}
 
+	return dc.Image(), nil
+}
+
+func ContourPNG(ctx context.Context, im image.Image, opts *ContourOptions) (Outline, error) {
+
+	new_im, err := ContourRaster(ctx, im, opts)
+
+	if err != nil {
+		return nil, fmt.Errorf("Failed to derive raster, %w", err)
+	}
+
 	o := &PNGOutline{
-		image: dc.Image(),
+		image: new_im,
 	}
 
 	return o, nil
