@@ -13,6 +13,7 @@ import (
 	"github.com/go-pdf/fpdf"
 	"github.com/go-pdf/fpdf/contrib/barcode"
 	"github.com/nfnt/resize"
+	"github.com/sfomuseum/go-coloringbook/outline"
 	"github.com/sfomuseum/go-sfomuseum-coloringbook/static"
 )
 
@@ -25,7 +26,7 @@ type AddSheetOptions struct {
 	CreditLine      string
 	AccessionNumber string
 	URL             string
-	Outline         *OutlineOptions
+	Outline         *outline.OutlineOptions
 }
 
 func AddSheet(ctx context.Context, pdf *fpdf.Fpdf, opts *AddSheetOptions) error {

@@ -44,7 +44,7 @@ github.com/aaronland/gocloud-blob/bucket
 # github.com/aaronland/gocloud-blob-s3 v0.2.4
 ## explicit; go 1.18
 github.com/aaronland/gocloud-blob-s3
-# github.com/aws/aws-lambda-go v1.42.0
+# github.com/aws/aws-lambda-go v1.43.0
 ## explicit; go 1.18
 github.com/aws/aws-lambda-go/lambda
 github.com/aws/aws-lambda-go/lambda/handlertrace
@@ -330,6 +330,9 @@ github.com/paulmach/orb/planar
 # github.com/ruudk/golang-pdf417 v0.0.0-20201230142125-a7e3863a1245
 ## explicit; go 1.15
 github.com/ruudk/golang-pdf417
+# github.com/sfomuseum/go-coloringbook v0.0.1
+## explicit; go 1.21.5
+github.com/sfomuseum/go-coloringbook/outline
 # github.com/sfomuseum/go-edtf v1.1.1
 ## explicit; go 1.12
 github.com/sfomuseum/go-edtf
@@ -363,7 +366,7 @@ github.com/srwiley/oksvg
 # github.com/srwiley/rasterx v0.0.0-20220730225603-2ab79fcdd4ef
 ## explicit; go 1.17
 github.com/srwiley/rasterx
-# github.com/tidwall/gjson v1.16.0
+# github.com/tidwall/gjson v1.17.0
 ## explicit; go 1.12
 github.com/tidwall/gjson
 # github.com/tidwall/match v1.1.1
@@ -647,5 +650,3 @@ google.golang.org/protobuf/types/descriptorpb
 google.golang.org/protobuf/types/known/anypb
 google.golang.org/protobuf/types/known/durationpb
 google.golang.org/protobuf/types/known/timestamppb
-# gopkg.in/yaml.v2 v2.4.0
-## explicit; go 1.15

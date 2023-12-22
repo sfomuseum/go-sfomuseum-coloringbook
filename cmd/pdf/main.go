@@ -18,6 +18,7 @@ import (
 	"github.com/nfnt/resize"
 	"github.com/sfomuseum/go-flags/flagset"
 	"github.com/sfomuseum/go-sfomuseum-coloringbook"
+	"github.com/sfomuseum/go-coloringbook/outline"
 	sfom_writer "github.com/sfomuseum/go-sfomuseum-writer/v3"
 	"github.com/tidwall/gjson"
 	"github.com/whosonfirst/go-reader"
@@ -43,6 +44,9 @@ func main() {
 	var access_token_uri string
 
 	var contour_iterations int
+	var contour_scale float64
+	var contour_format string
+
 	var vtracer_precision int
 	var vtracer_speckle int
 
@@ -65,6 +69,9 @@ func main() {
 	fs.StringVar(&access_token_uri, "access-token-uri", "", "...")
 
 	fs.IntVar(&contour_iterations, "contour-iteration", 8, "...")
+	fs.Float64Var(&contour_scale, "contour-scale", 1.0, "...")
+	fs.StringVar(&contour_format, "contour-format", "png", "...")
+
 	fs.IntVar(&vtracer_precision, "vtracer-precision", 6, "...")
 	fs.IntVar(&vtracer_speckle, "vtracer-speckle", 8, "...")
 
@@ -137,21 +144,23 @@ func main() {
 
 		if object_image == "" {
 
-			contour_opts := &coloringbook.ContourOptions{
+			contour_opts := &outline.ContourOptions{
 				Iterations: contour_iterations,
+				Scale:      contour_scale,
+				Format:     contour_format,
 			}
 
-			trace_opts := &coloringbook.TraceOptions{
+			trace_opts := &outline.TraceOptions{
 				Precision: vtracer_precision,
 				Speckle:   vtracer_speckle,
 			}
 
-			raster_opts := &coloringbook.RasterizeOptions{
+			raster_opts := &outline.RasterizeOptions{
 				UseBatik:  use_batik,
 				PathBatik: path_batik,
 			}
 
-			outline_opts := &coloringbook.OutlineOptions{
+			outline_opts := &outline.OutlineOptions{
 				Contour:   contour_opts,
 				Trace:     trace_opts,
 				Rasterize: raster_opts,
