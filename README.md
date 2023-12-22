@@ -6,6 +6,8 @@ Go package for generating SFO Museum "coloring book" sheets.
 
 This is SFO Museum specific code and is not designed to be a general purpose tool. It is being released "as-is" as a reference implementation in a spirit of generousity and to support the [Coloring Books Pages For the SFO Museum Aviation Collection ](https://millsfield.sfomuseum.org/blog/2023/12/18/coloringbook/) blog post.
 
+General purpose tools for "outlining" arbitrary images are available in the [sfomuseum/go-coloringbook](https://github.com/sfomuseum/go-coloringbook) package.
+
 ## Documentation
 
 Documentation is incomplete at this time.
@@ -16,3 +18,4 @@ Documentation is incomplete at this time.
 * https://xmlgraphics.apache.org/batik/
 * https://github.com/fogleman/contourmap
 * https://github.com/go-pdf/fpdf
+* https://github.com/sfomuseum/go-coloringbook
