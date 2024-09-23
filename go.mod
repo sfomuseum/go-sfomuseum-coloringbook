@@ -101,11 +101,11 @@ require (
 	go.mongodb.org/mongo-driver v1.11.4 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	go.uber.org/ratelimit v0.3.0 // indirect
-	golang.org/x/crypto v0.15.0 // indirect
+	golang.org/x/crypto v0.21.0 // indirect
 	golang.org/x/image v0.18.0 // indirect
-	golang.org/x/net v0.18.0 // indirect
+	golang.org/x/net v0.23.0 // indirect
 	golang.org/x/oauth2 v0.14.0 // indirect
-	golang.org/x/sys v0.14.0 // indirect
+	golang.org/x/sys v0.18.0 // indirect
 	golang.org/x/text v0.16.0 // indirect
 	golang.org/x/xerrors v0.0.0-20231012003039-104605ab7028 // indirect
 	google.golang.org/api v0.151.0 // indirect
